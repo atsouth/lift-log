@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,14 +9,14 @@
   
   <style>
     :root { 
-      --bg: #F2F2F7; 
-      --card: #FFFFFF; 
-      --card-elevated: #E5E5EA; 
-      --accent: #34C759; 
-      --primary-btn: #007AFF; 
-      --text: #000000; 
-      --muted: #8E8E93; 
-      --border: rgba(0, 0, 0, 0.06); 
+      --bg: #F2F2F7; /* iOS System Light Gray Canvas */
+      --card: #FFFFFF; /* Pure White Premium Elevations */
+      --card-elevated: #E5E5EA; /* Tactile Press State Well */
+      --accent: #34C759; /* iOS Pure Green */
+      --primary-btn: #007AFF; /* Vibrant iOS Cobalt Blue */
+      --text: #000000; /* Deep Obsidian Typography */
+      --muted: #8E8E93; /* System Subtext Slate */
+      --border: rgba(0, 0, 0, 0.06); /* Ultrafine Hairline Dividers */
       --badge-bg: #E5E5EA;
       --badge-txt: #48484A;
     }
@@ -337,8 +336,7 @@
 
   <script>
     // CRITICAL: Insert your copied Google Web App API URL here
-    const API_URL = "https://script.google.com/macros/s/AKfycbwWap_I8B6apAOi17PlF6yDusn6CUGnvcKLqsFuStYL-5YK4G4KxKDq_N6RWhukR5vM/exec
-";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwWap_I8B6apAOi17PlF6yDusn6CUGnvcKLqsFuStYL-5YK4G4KxKDq_N6RWhukR5vM/exec";
 
     const workoutRoutines = {
       "Push A": [
@@ -452,120 +450,4 @@
               <div class="exercise-title" data-rawname="${name}">${name}</div>
               <div class="badge-stack">
                 <div class="target-badge">Goal: ${target}</div>
-                ${friMarkup}
-              </div>
-            </div>
-          </div>
-          <div class="set-header">
-            <span style="width:45px;">Set</span>
-            <span style="flex:1; text-align:center;">Weight</span>
-            <span style="flex:1; text-align:center;">Reps</span>
-          </div>
-          ${[1, 2, 3].map(setNum => {
-            const pastW = past[`s${setNum}_w`] !== undefined ? past[`s${setNum}_w`] : '';
-            const pastR = past[`s${setNum}_r`] !== undefined ? past[`s${setNum}_r`] : '';
-            const placeholderW = pastW ? `${pastW} lbs` : 'lbs';
-            const placeholderR = pastR ? `${pastR} reps` : 'reps';
-            
-            return `
-              <div class="set-row">
-                <div class="set-label">S${setNum}</div>
-                <div class="input-group">
-                  <input type="number" step="any" inputmode="decimal" id="${exId}_s${setNum}_w" placeholder="${placeholderW}">
-                  <input type="number" inputmode="numeric" pattern="\\d*" id="${exId}_s${setNum}_r" placeholder="${placeholderR}">
-                </div>
-              </div>
-            `;
-          }).join('')}
-        `;
-        container.appendChild(card);
-      });
-
-      document.querySelectorAll('#exercise-container input').forEach(input => {
-        input.value = localStorage.getItem(input.id) || '';
-        input.addEventListener('input', (e) => {
-          localStorage.setItem(e.target.id, e.target.value);
-        });
-      });
-
-      switchView('view-session');
-    }
-
-    function submitWorkout() {
-      const btn = document.getElementById('submit-btn');
-      btn.innerText = "Transmitting to Ledger...";
-      btn.disabled = true;
-
-      const cardNodes = document.querySelectorAll('#exercise-container .card');
-      const loggedExercises = [];
-
-      cardNodes.forEach((card, index) => {
-        const exId = `ex_${index}`;
-        const name = card.querySelector('.exercise-title').getAttribute('data-rawname');
-        
-        loggedExercises.push({
-          name: name,
-          s1_w: document.getElementById(`${exId}_s1_w`).value,
-          s1_r: document.getElementById(`${exId}_s1_r`).value,
-          s2_w: document.getElementById(`${exId}_s2_w`).value,
-          s2_r: document.getElementById(`${exId}_s2_r`).value,
-          s3_w: document.getElementById(`${exId}_s3_w`).value,
-          s3_r: document.getElementById(`${exId}_s3_r`).value
-        });
-      });
-
-      const payload = {
-        blockName: currentBlock,
-        exercises: loggedExercises
-      };
-
-      fetch(API_URL, {
-        method: 'POST',
-        mode: 'cors',
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.result === "Success") {
-          localStorage.clear();
-          switchView('view-success');
-        } else {
-          alert('Transmission error: ' + data.result);
-          btn.innerText = "Submit workout";
-          btn.disabled = false;
-        }
-      })
-      .catch(err => {
-        alert('Network execution failure: Remote endpoint unreachable.');
-        btn.innerText = "Submit workout";
-        btn.disabled = false;
-      });
-    }
-
-    function abortSession() {
-      switchView('view-home');
-    }
-
-    function returnHome() {
-      const btn = document.getElementById('submit-btn');
-      btn.innerText = "Submit workout";
-      btn.disabled = false;
-      switchView('view-home');
-    }
-
-    // Initialize Last Workout Marker from Deployed Database
-    fetch(`${API_URL}?action=getLastCompletedBlock`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.result) return;
-        const cards = document.querySelectorAll('.grid .block-card');
-        cards.forEach(card => {
-          if (card.textContent.trim() === data.result.trim()) {
-            card.classList.add('last-completed');
-          }
-        });
-      })
-      .catch(() => console.log("Offline boot initialized. State marker deferred."));
-  </script>
-</body>
-</html>
+                ${friMarkup
