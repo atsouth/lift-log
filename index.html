@@ -339,7 +339,7 @@
 
   <script>
    // CONFIGURATION: Hardcode your compiled Apps Script macro deployment URL here
-    const API_URL = "https://script.google.com/macros/s/AKfycbyW6g6pY6y5Z9Vpq7bR_5zHH1MmdE_pMxVcDp0iUCZBaHv-bk-fsU9-Y7BJJMM1HnoI/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxNqsSq9nkmVT7Tz5UXpsbZX9WDTZmt1Fex7XQzwk7YXJ4s2KaogncsJBJpDFdO_rDo/exec";
 
     const workoutRoutines = {
       "Push A": ["TechnoGym Chest Press [8-12]", "TechnoGym Machine Flat Press [8-12]", "Seated Machine Lateral Raises [12-15]", "Overhead Cable Tricep Extensions [12-15]"],
@@ -358,12 +358,52 @@
       window.scrollTo(0,0);
     }
 
+    /**
+     * DYNAMIC JSONP TRANSPORT CONTROLLER
+     * Injects temporary script nodes to completely bypass client CORS restrictions on Reads
+     */
+    function requestJSONP(action, params = {}) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+        let url = `${API_URL}?action=${action}&`;
+        
+        for (let key in params) {
+          url += `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}&`;
+        }
+        
+        const script = document.createElement('script');
+        script.src = `${url}callback=${callbackName}`;
+        
+        const timeoutId = setTimeout(() => {
+          cleanup();
+          reject(new TypeError("Database pipeline latency timeout"));
+        }, 10000);
+        
+        function cleanup() {
+          clearTimeout(timeoutId);
+          if (script.parentNode) script.parentNode.removeChild(script);
+          delete window[callbackName];
+        }
+        
+        window[callbackName] = (data) => {
+          cleanup();
+          resolve(data);
+        };
+        
+        script.onerror = () => {
+          cleanup();
+          reject(new TypeError("Failed to compile script stream resource"));
+        };
+        
+        document.body.appendChild(script);
+      });
+    }
+
     function initializeSession(blockName) {
       document.getElementById('loading').style.display = 'flex';
       currentBlock = blockName;
       
-      fetch(`${API_URL}?action=getMetrics&blockName=${encodeURIComponent(blockName)}`)
-        .then(response => response.json())
+      requestJSONP("getMetrics", { blockName: blockName })
         .then(historyMap => {
           renderSessionPage(blockName, historyMap);
           document.getElementById('loading').style.display = 'none';
@@ -441,6 +481,10 @@
       switchView('view-session');
     }
 
+    /**
+     * OPAQUE WRITE DATA SYSTEM
+     * Dispatches POST payload via no-cors mode, executing sheet updates while bypassing redirect validation rules
+     */
     function submitWorkout() {
       const btn = document.getElementById('submit-btn');
       btn.innerText = "Transmitting to Ledger...";
@@ -470,20 +514,13 @@
 
       fetch(API_URL, {
         method: "POST",
-        mode: "cors",
+        mode: "no-cors", 
         headers: { "Content-Type": "text/plain;charset=utf-8" }, 
         body: JSON.stringify(payload)
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === "Success") {
-          localStorage.clear();
-          switchView('view-success');
-        } else {
-          alert('Transmission error: ' + JSON.stringify(data));
-          btn.innerText = "Submit workout";
-          btn.disabled = false;
-        }
+      .then(() => {
+        localStorage.clear();
+        switchView('view-success');
       })
       .catch(err => {
         alert('Network transport failure: ' + err);
@@ -500,12 +537,11 @@
       switchView('view-home');
     }
 
-    // Initial Telemetry Fetch for UI Decoration
+    // TELEMETRY RECOVERY VIA JSONP LOOP
     window.addEventListener('DOMContentLoaded', () => {
-      fetch(`${API_URL}?action=getLastBlock`)
-        .then(res => res.json())
+      requestJSONP("getLastBlock")
         .then(data => {
-          if (!data.lastBlock) return;
+          if (!data || !data.lastBlock) return;
           document.querySelectorAll('.grid .block-card').forEach(card => {
             if (card.textContent.trim() === data.lastBlock.trim()) {
               card.classList.add('last-completed');
