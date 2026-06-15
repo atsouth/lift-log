@@ -50,7 +50,6 @@
       margin-top: 2px;
     }
 
-    /* Section Headers */
     .section-title {
       font-size: 13px;
       font-weight: 600;
@@ -87,7 +86,6 @@
       transform: scale(0.98);
     }
 
-    /* Active Highlight States */
     .block-card.last-completed {
       border-color: var(--vector-teal);
     }
@@ -106,7 +104,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* BIOMETRIC HIGH-DENSITY WIDGET MATRIX */
+    /* HIGH-DENSITY BIOMETRIC WIDGET GRID */
     .widget-matrix {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -121,14 +119,17 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 115px;
+      min-height: 105px;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      position: relative;
-      overflow: hidden;
     }
 
-    /* Top Row Layout */
+    /* Force complete grid horizontal alignment for Blood Pressure */
+    .widget.full-width {
+      grid-column: span 2;
+      min-height: 95px;
+    }
+
     .widget-meta {
       display: flex;
       align-items: center;
@@ -144,10 +145,8 @@
       height: 14px;
     }
 
-    /* Center Reading Vectors */
     .widget-value-box {
       margin-top: 8px;
-      margin-bottom: 4px;
       display: flex;
       align-items: baseline;
       gap: 4px;
@@ -166,22 +165,7 @@
       color: var(--text-muted);
     }
 
-    /* Bottom Row Context Parameters */
-    .widget-context {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      border-top: 1px solid rgba(255, 255, 255, 0.04);
-      padding-top: 6px;
-      margin-top: 4px;
-    }
-
-    .widget-context span {
-      color: #ffffff;
-      font-weight: 600;
-    }
-
-    /* Vector Theming Variances */
+    /* Color Theming Engines */
     .theme-teal { --accent: var(--vector-teal); }
     .theme-crimson { --accent: var(--vector-crimson); }
     .theme-amber { --accent: var(--vector-amber); }
@@ -197,7 +181,7 @@
     .theme-amber .widget-meta svg { fill: var(--vector-amber); }
     .theme-indigo .widget-meta svg { fill: var(--vector-indigo); }
 
-    /* LOADING SCREEN LAYER */
+    /* LOADING SCREEN UTILITY overlay */
     #loading {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -251,38 +235,57 @@
     
     <div class="widget theme-teal">
       <div class="widget-meta">
-        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5g c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
         HRV Status
       </div>
       <div class="widget-value-box">
         <div class="widget-value" id="bio-hrv">--</div>
         <div class="widget-unit">ms</div>
       </div>
-      <div class="widget-context">Rest Rate: <span id="bio-rhr">--</span> bpm</div>
     </div>
 
-    <div class="widget theme-crimson">
+    <div class="widget theme-teal">
       <div class="widget-meta">
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.5h-2v-2h2v2zm0-4.5h-2V7h2v6z"/></svg>
-        Cardio Load
+        Resting HR
       </div>
       <div class="widget-value-box">
-        <div class="widget-value" id="bio-bp" style="font-size: 24px;">--</div>
+        <div class="widget-value" id="bio-rhr">--</div>
+        <div class="widget-unit">bpm</div>
+      </div>
+    </div>
+
+    <div class="widget theme-crimson full-width">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
+        Blood Pressure
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-bp">--</div>
         <div class="widget-unit">mmHg</div>
       </div>
-      <div class="widget-context">Vascular Pressure</div>
     </div>
 
     <div class="widget theme-amber">
       <div class="widget-meta">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
-        Body Mass
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+        Body Weight
       </div>
       <div class="widget-value-box">
         <div class="widget-value" id="bio-weight">--</div>
         <div class="widget-unit">lbs</div>
       </div>
-      <div class="widget-context">Composition: <span id="bio-bf">--</span></div>
+    </div>
+
+    <div class="widget theme-amber">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/></svg>
+        Body Fat
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-bf">--</div>
+        <div class="widget-unit">%</div>
+      </div>
     </div>
 
     <div class="widget theme-indigo">
@@ -294,7 +297,6 @@
         <div class="widget-value" id="bio-rem">--</div>
         <div class="widget-unit">hrs</div>
       </div>
-      <div class="widget-context">Cognitive Recovery</div>
     </div>
 
     <div class="widget theme-indigo">
@@ -306,7 +308,6 @@
         <div class="widget-value" id="bio-deep">--</div>
         <div class="widget-unit">hrs</div>
       </div>
-      <div class="widget-context">Somatic/Tissue Repair</div>
     </div>
 
   </div>
@@ -315,9 +316,6 @@
     // HARDCODED ROUTING URL NODE TARGET
     const API_URL = "https://script.google.com/macros/s/AKfycbyHi1jr0Fcme-S-8GvnMZ40JZEW0J8mBnIYm-bRPG0hbBb37rYUgCO-zqPNcspNYh2w/exec";
 
-    /**
-     * Headless Cross-Origin Handshake Generator
-     */
     function requestJSONP(action, params = {}) {
       return new Promise((resolve, reject) => {
         const callbackName = "jsonp_callback_" + Math.round(Math.random() * 1000000);
@@ -329,59 +327,4 @@
 
         const script = document.createElement("script");
         let url = `${API_URL}?action=${action}&callback=${callbackName}`;
-        for (const key in params) {
-          url += `&${key}=${encodeURIComponent(params[key])}`;
-        }
-        
-        script.src = url;
-        script.onerror = (err) => {
-          delete window[callbackName];
-          document.body.removeChild(script);
-          reject(err);
-        };
-        document.body.appendChild(script);
-      });
-    }
-
-    // Telemetry Sync Loop Execution
-    window.addEventListener('DOMContentLoaded', () => {
-      requestJSONP("getLastBlock")
-        .then(data => {
-          document.getElementById('loading').style.display = 'none';
-          if (!data) return;
-          
-          // Hydrate Split Outline Highlights
-          if (data.lastBlock) {
-            const cleanTarget = data.lastBlock.trim().replace(/\s+/g, '');
-            const card = document.getElementById(`block-${cleanTarget}`);
-            if (card) {
-              card.classList.add('last-completed');
-            }
-          }
-          
-          // Hydrate Dashboard Widgets
-          if (data.biomarkers) {
-            const bio = data.biomarkers;
-            
-            document.getElementById('bio-hrv').innerText = bio.hrv;
-            document.getElementById('bio-rhr').innerText = bio.rhr;
-            document.getElementById('bio-weight').innerText = bio.weight;
-            document.getElementById('bio-bf').innerText = bio.bodyFat.includes('%') ? bio.bodyFat : bio.bodyFat + '%';
-            document.getElementById('bio-rem').innerText = bio.rem;
-            document.getElementById('bio-deep').innerText = bio.deep;
-            
-            if (bio.systolic !== "--" && bio.diastolic !== "--") {
-              document.getElementById('bio-bp').innerText = `${bio.systolic}/${bio.diastolic}`;
-            } else {
-              document.getElementById('bio-bp').innerText = bio.systolic || "--";
-            }
-          }
-        })
-        .catch(err => {
-          console.error("Pipeline Sync Interrupted:", err);
-          document.getElementById('loading').style.display = 'none';
-        });
-    });
-  </script>
-</body>
-</html>
+        for (const key
