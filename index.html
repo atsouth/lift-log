@@ -66,11 +66,11 @@
       letter-spacing: normal;
     }
 
-    /* VIEW CONTROLLER HUD SWITCHERS */
+    /* VIEW MANAGEMENT CONTROLLERS */
     .view-container { display: block; }
     .view-container.hidden { display: none; }
 
-    /* BLOCK SPLIT INTERFACE GRID */
+    /* DASHBOARD OVERVIEW SPLIT SPACES */
     .workout-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -110,7 +110,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* BIOMETRICS GRID PANELS */
+    /* BIOMETRIC INDICATORS HUD PANELS */
     .widget-matrix {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -172,7 +172,6 @@
       color: var(--text-muted);
     }
 
-    /* Categories Styling hooks */
     .theme-teal { --accent: var(--vector-teal); }
     .theme-crimson { --accent: var(--vector-crimson); }
     .theme-amber { --accent: var(--vector-amber); }
@@ -188,7 +187,7 @@
     .theme-amber .widget-meta svg { fill: var(--vector-amber); }
     .theme-indigo .widget-meta svg { fill: var(--vector-indigo); }
 
-    /* SUB-VIEW FORM WORKOUT SHEETS */
+    /* WORKOUT ENTRY HUD OVERHAUL */
     .workout-header-row {
       display: flex;
       justify-content: space-between;
@@ -210,32 +209,32 @@
     .exercise-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 14px;
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
 
     .exercise-title {
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
       letter-spacing: -0.3px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .exercise-widgets-row {
       display: flex;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .micro-badge {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--card-border);
-      padding: 4px 10px;
+      padding: 6px 12px;
       border-radius: 8px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
     }
@@ -243,40 +242,30 @@
     .micro-badge span { color: #ffffff; font-weight: 700; }
     .micro-badge.highlight span { color: var(--vector-teal); }
 
-    .exercise-history {
-      font-size: 12px;
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-bottom: 14px;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px dashed rgba(255, 255, 255, 0.05);
-    }
-
-    /* VERTICAL INPUT ARRAYS ROW SPECIFICATIONS */
+    /* ERGONOMIC LABELS AND TALL INPUT CELLS */
     .sets-vertical-container {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .set-ledger-row {
       display: grid;
-      grid-template-columns: 55px 1fr 1fr;
+      grid-template-columns: 60px 1fr 1fr;
       align-items: center;
       gap: 12px;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: rgba(0, 0, 0, 0.35);
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .set-ledger-label {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .input-wrapper {
@@ -285,7 +274,8 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      padding: 6px 10px;
+      padding: 10px 12px;
+      height: 46px; /* Scaled touch target height */
     }
 
     .input-wrapper input {
@@ -293,10 +283,10 @@
       background: transparent;
       border: none;
       color: #ffffff;
-      font-size: 15px;
+      font-size: 17px;
       font-weight: 700;
       text-align: right;
-      padding-right: 4px;
+      padding-right: 6px;
     }
 
     .input-wrapper input:focus { outline: none; }
@@ -304,7 +294,7 @@
     .input-wrapper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
     .input-wrapper span {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-muted);
       font-weight: 600;
     }
@@ -440,7 +430,7 @@
 
       <div class="widget theme-crimson full-width">
         <div class="widget-meta">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.48 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
           Blood Pressure
         </div>
         <div class="widget-value-box">
@@ -462,7 +452,7 @@
 
   <script>
     // HARDCODED ROUTING URL NODE TARGET
-    const API_URL = "https://script.google.com/macros/s/AKfycbx5-KSPG8jFjOeKPgzz4uzBzY0KHdqz7xlUkKwcLOrajTpu-hkFDqVJBP7n6OEcwMiq/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxDXEXDDF6aAZOMcd_LQ3wGNHOFDvH6x4S4SBHQjYRr_zlEShVx-tLmiZt1ekf5eapk/exec";
 
     const WORKOUT_CONFIG = {
       "Push A": ["TechnoGym Chest Press [8-12]", "TechnoGym Machine Flat Press [8-12]", "Seated Machine Lateral Raises [12-15]", "Overhead Cable Tricep Extensions [12-15]"],
@@ -514,66 +504,62 @@
           
           const exercises = WORKOUT_CONFIG[blockName] || [];
           exercises.forEach((exName) => {
-            // Normalize mapping coordinates
             const matchReps = exName.match(/\[(.*?)\]/);
             const goalRepsDisplay = matchReps ? matchReps[1] : "8-12";
             const cleanDisplayTitle = exName.replace(/\s*\[.*?\]/, '').trim();
 
-            // Resolve cross-referenced dictionary lookups safely
-            const hist = historyMap[cleanDisplayTitle] || historyMap[exName] || { s1_w:"", s1_r:"", s2_w:"", s2_r:"", s3_w:"", s3_r:"", fri: null };
+            // Client Alphanumeric normalizer handshake logic
+            const normKey = cleanDisplayTitle.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const hist = historyMap[normKey] || { s1_w:"", s1_r:"", s2_w:"", s2_r:"", s3_w:"", s3_r:"", fri: "" };
 
             let friDisplay = "--";
             if (hist.fri !== undefined && hist.fri !== null && hist.fri !== "") {
               var parsedFri = parseFloat(hist.fri);
-              friDisplay = isNaN(parsedFri) ? "--" : parsedFri.toFixed(2);
-            }
-
-            let historyString = "No tracked session logs found.";
-            if (hist.s1_w || hist.s2_w || hist.s3_w) {
-              historyString = `Last: ${hist.s1_w || '—'}lbs x ${hist.s1_r || '—'}r | ${hist.s2_w || '—'}lbs x ${hist.s2_r || '—'}r | ${hist.s3_w || '—'}lbs x ${hist.s3_r || '—'}r`;
+              friDisplay = isNaN(parsedFri) ? hist.fri : parsedFri.toFixed(2);
             }
 
             const card = document.createElement('div');
             card.className = 'exercise-card';
+            
+            // Native Focus Injection filters to wipe text nodes from input spaces instantly on touch/click
             card.innerHTML = `
               <div class="exercise-title">${cleanDisplayTitle}</div>
               <div class="exercise-widgets-row">
                 <div class="micro-badge">Goal Reps: <span>${goalRepsDisplay}</span></div>
                 <div class="micro-badge highlight">FRI: <span>${friDisplay}</span></div>
               </div>
-              <div class="exercise-history">${historyString}</div>
               
-              <div class="sets-vertical-container" data-exname="${cleanDisplayTitle}">
+              <div class="sets-vertical-container" data-exname="${exName}">
                 <div class="set-ledger-row">
                   <div class="set-ledger-label">Set 1</div>
                   <div class="input-wrapper">
-                    <input type="number" step="any" class="input-w" placeholder="${hist.s1_w || '—'}">
+                    <input type="number" step="any" class="input-w" placeholder="${hist.s1_w || '—'}" onfocus="this.dataPlaceholder=this.placeholder; this.placeholder=''" onblur="if(this.placeholder=='') this.placeholder=this.dataPlaceholder;">
                     <span>lbs</span>
                   </div>
                   <div class="input-wrapper">
-                    <input type="number" class="input-r" placeholder="${hist.s1_r || '—'}">
+                    <input type="number" class="input-r" placeholder="${hist.s1_r || '—'}" onfocus="this.dataPlaceholder=this.placeholder; this.placeholder=''" onblur="if(this.placeholder=='') this.placeholder=this.dataPlaceholder;">
                     <span>reps</span>
                   </div>
                 </div>
                 <div class="set-ledger-row">
                   <div class="set-ledger-label">Set 2</div>
                   <div class="input-wrapper">
-                    <input type="number" step="any" class="input-w" placeholder="${hist.s2_w || '—'}">
+                    <input type="number" step="any" class="input-w" placeholder="${hist.s2_w || '—'}" onfocus="this.dataPlaceholder=this.placeholder; this.placeholder=''" onblur="if(this.placeholder=='') this.placeholder=this.dataPlaceholder;">
                     <span>lbs</span>
                   </div>
                   <div class="input-wrapper">
-                    <input type="number" class="input-r" placeholder="${hist.s2_r || '—'}">
+                    <input type="number" class="input-r" placeholder="${hist.s2_r || '—'}" onfocus="this.dataPlaceholder=this.placeholder; this.placeholder=''" onblur="if(this.placeholder=='') this.placeholder=this.dataPlaceholder;">
                     <span>reps</span>
                   </div>
                 </div>
                 <div class="set-ledger-row">
                   <div class="set-ledger-label">Set 3</div>
                   <div class="input-wrapper">
-                    <input type="number" step="any" class="input-w" placeholder="${hist.s3_w || '—'}">
+                    <input type="number" step="any" class="input-w" placeholder="${hist.s3_w || '—'}" onfocus="this.dataPlaceholder=this.placeholder; this.placeholder=''" onblur="if(this.placeholder=='') this.placeholder=this.dataPlaceholder;">
                     <span>lbs</span>
                   </div>
                   <div class="input-wrapper">
-                    <input type="number" class="input-r" placeholder="${hist.s3_r || '—'}">
+                    <input type="number" class="input-r" placeholder="${hist.s3_r || '—'}" onfocus="this.dataPlaceholder=this.placeholder; this.placeholder=''" onblur="if(this.placeholder=='') this.placeholder=this.dataPlaceholder;">
                     <span>reps</span>
                   </div>
                 </div>
@@ -594,18 +580,19 @@
       const exercisesPayload = [];
       
       containers.forEach(container => {
-        const name = container.getAttribute('data-exname');
+        const name = container.getAttribute('data-exname'); // Collects original bracket key configuration
         const wInputs = container.querySelectorAll('.input-w');
         const rInputs = container.querySelectorAll('.input-r');
         
         const getVal = (inputNode) => {
           if (inputNode.value !== "") return inputNode.value;
           var ph = inputNode.placeholder;
-          return (ph !== "—" && ph !== "") ? ph : "";
+          if (ph === "—" || ph === "") return "";
+          return ph;
         };
 
         exercisesPayload.push({
-          name: name, // Transmits clean standardized string name match
+          name: name, 
           s1_w: getVal(wInputs[0]), s1_r: getVal(rInputs[0]),
           s2_w: getVal(wInputs[1]), s2_r: getVal(rInputs[1]),
           s3_w: getVal(wInputs[2]), s3_r: getVal(rInputs[2])
