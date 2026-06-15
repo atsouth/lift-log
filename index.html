@@ -60,17 +60,11 @@
       margin-top: 20px;
     }
 
-    .section-title span {
-      text-transform: none;
-      font-weight: 500;
-      letter-spacing: normal;
-    }
-
-    /* CODES CONTROL */
+    /* VIEW LAYOUT WRAPPERS */
     .view-container { display: block; }
     .view-container.hidden { display: none; }
 
-    /* HUD PANELS SPATIAL GRIDS */
+    /* GRID TRACKS */
     .workout-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -110,7 +104,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* COMPOSITION STATS GRID WIDGETS */
+    /* STATS DASHBOARD PANELS */
     .widget-matrix {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -187,7 +181,7 @@
     .theme-amber .widget-meta svg { fill: var(--vector-amber); }
     .theme-indigo .widget-meta svg { fill: var(--vector-indigo); }
 
-    /* SCALED WORKOUT LIST CARD ARRAYS */
+    /* WORKOUT FORMS CONTROLS */
     .workout-header-row {
       display: flex;
       justify-content: space-between;
@@ -217,7 +211,7 @@
     }
 
     .exercise-title {
-      font-size: 20px; /* Scaled text size */
+      font-size: 20px; /* High-Density Layout text scaling adjustments */
       font-weight: 700;
       letter-spacing: -0.4px;
       margin-bottom: 12px;
@@ -234,7 +228,7 @@
       border: 1px solid var(--card-border);
       padding: 6px 14px;
       border-radius: 8px;
-      font-size: 13px; /* Enhanced badge sizing */
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-muted);
     }
@@ -274,7 +268,7 @@
       border: 1px solid var(--card-border);
       border-radius: 8px;
       padding: 10px 14px;
-      height: 48px; /* Taller tactile click area */
+      height: 48px; /* High legibility touch targets */
     }
 
     .input-wrapper input {
@@ -282,7 +276,7 @@
       background: transparent;
       border: none;
       color: #ffffff;
-      font-size: 18px; /* High legibility numbers */
+      font-size: 18px;
       font-weight: 700;
       text-align: right;
       padding-right: 6px;
@@ -450,8 +444,8 @@
   </div>
 
   <script>
-    // HARDCODED ROUTING URL NODE TARGET
-    const API_URL = "https://script.google.com/macros/s/AKfycbypfHhhxJhALw0k5Y8_GgTbslvEb5XSyYjRiT1oekqjvE5Es3yALai5gJoFNnFrbnb7/exec";
+    // DEPLOYED LOG CONNECTIONS TARGET HASH
+    const API_URL = "https://script.google.com/macros/s/AKfycbw8GRuJ2G-LS2wCLvgXpZvYpnTfDqvFKS3ti_PNcySS3FXqtxigVBBK1i3aUe2SbT4p/exec";
 
     const WORKOUT_CONFIG = {
       "Push A": ["TechnoGym Chest Press [8-12]", "TechnoGym Machine Flat Press [8-12]", "Seated Machine Lateral Raises [12-15]", "Overhead Cable Tricep Extensions [12-15]"],
@@ -507,7 +501,6 @@
             const goalRepsDisplay = matchReps ? matchReps[1] : "8-12";
             const cleanDisplayTitle = exName.replace(/\s*\[.*?\]/, '').trim();
 
-            // Client-side key generation targeting normalized hash structures
             const normKey = cleanDisplayTitle.toLowerCase().replace(/[^a-z0-9]/g, '');
             const hist = historyMap[normKey] || { s1_w:"", s1_r:"", s2_w:"", s2_r:"", s3_w:"", s3_r:"", fri: "" };
 
@@ -520,7 +513,6 @@
             const card = document.createElement('div');
             card.className = 'exercise-card';
             
-            // Layout construction with focus handlers that clear placeholder strings on selection
             card.innerHTML = `
               <div class="exercise-title">${cleanDisplayTitle}</div>
               <div class="exercise-widgets-row">
@@ -528,7 +520,7 @@
                 <div class="micro-badge highlight">FRI: <span>${friDisplay}</span></div>
               </div>
               
-              <div class="sets-vertical-container" data-exname="${cleanDisplayTitle}">
+              <div class="sets-vertical-container" data-exname="${exName}">
                 <div class="set-ledger-row">
                   <div class="set-ledger-label">Set 1</div>
                   <div class="input-wrapper">
@@ -579,7 +571,7 @@
       const exercisesPayload = [];
       
       containers.forEach(container => {
-        const cleanName = container.getAttribute('data-exname'); // Collects and passes clean standard string
+        const name = container.getAttribute('data-exname');
         const wInputs = container.querySelectorAll('.input-w');
         const rInputs = container.querySelectorAll('.input-r');
         
@@ -591,7 +583,7 @@
         };
 
         exercisesPayload.push({
-          name: cleanName, 
+          name: name, 
           s1_w: getVal(wInputs[0]), s1_r: getVal(rInputs[0]),
           s2_w: getVal(wInputs[1]), s2_r: getVal(rInputs[1]),
           s3_w: getVal(wInputs[2]), s3_r: getVal(rInputs[2])
