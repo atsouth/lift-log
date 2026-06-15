@@ -60,6 +60,12 @@
       margin-top: 20px;
     }
 
+    .section-title span {
+      text-transform: none;
+      font-weight: 500;
+      letter-spacing: normal;
+    }
+
     /* WORKOUT BLOCKS SPLIT */
     .workout-grid {
       display: grid;
@@ -124,7 +130,7 @@
       -webkit-backdrop-filter: blur(16px);
     }
 
-    /* Force complete grid horizontal alignment for Blood Pressure */
+    /* Force full grid block width configuration */
     .widget.full-width {
       grid-column: span 2;
       min-height: 95px;
@@ -150,6 +156,12 @@
       display: flex;
       align-items: baseline;
       gap: 4px;
+    }
+
+    /* Absolute Centering Rule for Full Width Cards */
+    .widget.full-width .widget-value-box {
+      justify-content: center;
+      width: 100%;
     }
 
     .widget-value {
@@ -181,7 +193,7 @@
     .theme-amber .widget-meta svg { fill: var(--vector-amber); }
     .theme-indigo .widget-meta svg { fill: var(--vector-indigo); }
 
-    /* LOADING SCREEN UTILITY */
+    /* LOADING SCREEN LAYER */
     #loading {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -230,42 +242,9 @@
     <div class="block-card" id="block-LegsB">Legs B</div>
   </div>
 
-  <div class="section-title">Physiological Indicators</div>
+  <div class="section-title" id="physiological-header">Physiological Indicators <span id="header-date"></span></div>
   <div class="widget-matrix">
     
-    <div class="widget theme-teal">
-      <div class="widget-meta">
-        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        HRV Status
-      </div>
-      <div class="widget-value-box">
-        <div class="widget-value" id="bio-hrv">--</div>
-        <div class="widget-unit">ms</div>
-      </div>
-    </div>
-
-    <div class="widget theme-teal">
-      <div class="widget-meta">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.5h-2v-2h2v2zm0-4.5h-2V7h2v6z"/></svg>
-        Resting HR
-      </div>
-      <div class="widget-value-box">
-        <div class="widget-value" id="bio-rhr">--</div>
-        <div class="widget-unit">bpm</div>
-      </div>
-    </div>
-
-    <div class="widget theme-crimson full-width">
-      <div class="widget-meta">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
-        Blood Pressure
-      </div>
-      <div class="widget-value-box">
-        <div class="widget-value" id="bio-bp">--</div>
-        <div class="widget-unit">mmHg</div>
-      </div>
-    </div>
-
     <div class="widget theme-amber">
       <div class="widget-meta">
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
@@ -285,6 +264,28 @@
       <div class="widget-value-box">
         <div class="widget-value" id="bio-bf">--</div>
         <div class="widget-unit">%</div>
+      </div>
+    </div>
+
+    <div class="widget theme-teal">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        HRV Status
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-hrv">--</div>
+        <div class="widget-unit">ms</div>
+      </div>
+    </div>
+
+    <div class="widget theme-teal">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.5h-2v-2h2v2zm0-4.5h-2V7h2v6z"/></svg>
+        Resting HR
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-rhr">--</div>
+        <div class="widget-unit">bpm</div>
       </div>
     </div>
 
@@ -310,10 +311,21 @@
       </div>
     </div>
 
+    <div class="widget theme-crimson full-width">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
+        Blood Pressure
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-bp">--</div>
+        <div class="widget-unit">mmHg</div>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    // CRITICAL: OVERWRITE THIS STRING WITH YOUR WORKING GOOGLE APPS SCRIPT WEB APP URL
+    // HARDCODED ROUTING URL NODE TARGET
     const API_URL = "https://script.google.com/macros/s/AKfycbyHi1jr0Fcme-S-8GvnMZ40JZEW0J8mBnIYm-bRPG0hbBb37rYUgCO-zqPNcspNYh2w/exec";
 
     function requestJSONP(action, params = {}) {
@@ -342,10 +354,14 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Direct escape switch: if the URL string has not been restored, hide loader and warn
+      // Automatic Localized Date String Generator
+      const today = new Date();
+      const options = { month: 'long', day: 'numeric', year: 'numeric' };
+      document.getElementById('header-date').innerText = ` - ${today.toLocaleDateString('en-US', options)}`;
+
       if (API_URL.indexOf("YOUR_WORKING_") !== -1 || API_URL === "") {
         document.getElementById('loading').style.display = 'none';
-        alert("Configuration Required:\n\nPlease paste your active production Google Web App URL into the 'API_URL' variable on line 173 of index.html.");
+        alert("Configuration Required: Paste active production URL into the 'API_URL' variable on line 186.");
         return;
       }
 
