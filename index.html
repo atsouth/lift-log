@@ -327,4 +327,63 @@
 
         const script = document.createElement("script");
         let url = `${API_URL}?action=${action}&callback=${callbackName}`;
-        for (const key
+        for (const key in params) {
+          url += `&${key}=${encodeURIComponent(params[key])}`;
+        }
+        
+        script.src = url;
+        script.onerror = (err) => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          reject(err);
+        };
+        document.body.appendChild(script);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      requestJSONP("getLastBlock")
+        .then(data => {
+          document.getElementById('loading').style.display = 'none';
+          if (!data) return;
+          
+          if (data.lastBlock) {
+            const cleanTarget = data.lastBlock.trim().replace(/\s+/g, '');
+            const card = document.getElementById(`block-${cleanTarget}`);
+            if (card) {
+              card.classList.add('last-completed');
+            }
+          }
+          
+          if (data.biomarkers) {
+            const bio = data.biomarkers;
+            
+            document.getElementById('bio-hrv').innerText = bio.hrv;
+            document.getElementById('bio-rhr').innerText = bio.rhr;
+            document.getElementById('bio-weight').innerText = bio.weight;
+            
+            // Handle body fat clean-up so trailing percentage signs aren't duplicated
+            let bfVal = bio.bodyFat;
+            if (bfVal !== "--" && bfVal.endsWith('%')) {
+              bfVal = bfVal.slice(0, -1).trim();
+            }
+            document.getElementById('bio-bf').innerText = bfVal;
+            
+            document.getElementById('bio-rem').innerText = bio.rem;
+            document.getElementById('bio-deep').innerText = bio.deep;
+            
+            if (bio.systolic !== "--" && bio.diastolic !== "--") {
+              document.getElementById('bio-bp').innerText = `${bio.systolic}/${bio.diastolic}`;
+            } else {
+              document.getElementById('bio-bp').innerText = bio.systolic || "--";
+            }
+          }
+        })
+        .catch(err => {
+          console.error("Pipeline Sync Interrupted:", err);
+          document.getElementById('loading').style.display = 'none';
+        });
+    });
+  </script>
+</body>
+</html>
