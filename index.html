@@ -32,10 +32,7 @@
     
     .card { background: var(--card); border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); overflow: hidden; }
     
-    /* Responsive Flex Header with Protective Row Gap Alignment */
     .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; position: relative; gap: 12px; width: 100%; }
-    
-    /* Crucial min-width assignment breaks max-content default constraints */
     .title-area { flex: 1; min-width: 0; }
     .exercise-title { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 6px; line-height: 1.3; word-break: break-word; color: var(--text); }
     
@@ -43,17 +40,21 @@
     .target-badge { background-color: rgba(0,122,255,0.1); color: var(--primary-btn); font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-block; white-space: nowrap; }
     .fri-capsule { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; display: inline-block; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
     
-    /* flex-shrink isolates the vector width to maintain grid harmony */
     .sparkline-wrapper { width: 110px; height: 38px; flex-shrink: 0; position: relative; background: rgba(242,242,247,0.5); border-radius: 8px; overflow: hidden; padding: 2px; margin-top: 2px; }
     .sparkline-svg { width: 100%; height: 100%; }
     
-    .set-header { display: flex; color: var(--muted); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 6px; border-bottom: 0.5px solid var(--card-elevated); margin-bottom: 10px; }
+    /* Layout Framework for Structural Uniformity */
+    .set-header { display: flex; align-items: center; color: var(--muted); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 6px; border-bottom: 0.5px solid var(--card-elevated); margin-bottom: 10px; }
+    .header-group { flex: 1; display: flex; gap: 10px; }
+    .header-col { flex: 1; text-align: center; }
+    
     .set-row { display: flex; align-items: center; margin-bottom: 10px; }
     .set-row:last-child { margin-bottom: 0; }
-    .set-label { width: 45px; font-size: 15px; font-weight: 600; color: var(--muted); }
+    .set-label { width: 45px; flex-shrink: 0; font-size: 15px; font-weight: 600; color: var(--muted); }
     .input-group { flex: 1; display: flex; gap: 10px; min-width: 0; }
     
-    input { flex: 1; background: var(--bg); border: none; border-radius: 10px; height: 42px; text-align: center; font-size: 16px; font-weight: 500; color: var(--text); outline: none; transition: background 0.15s; min-width: 0; }
+    /* Hard width zeroing strips native user-agent input inflation boundaries */
+    input { flex: 1; width: 0; min-width: 0; background: var(--bg); border: none; border-radius: 10px; height: 42px; text-align: center; font-size: 16px; font-weight: 500; color: var(--text); outline: none; transition: background 0.15s; }
     input:focus { background: #E5E5EA; }
     input::placeholder { color: var(--muted); font-weight: 400; font-size: 14px; }
     
@@ -219,9 +220,11 @@
             </div>
           </div>
           <div class="set-header">
-            <span style="width:45px;">Set</span>
-            <span style="flex:1; text-align:center;">Weight</span>
-            <span style="flex:1; text-align:center;">Reps</span>
+            <div style="width:45px; flex-shrink:0;">Set</div>
+            <div class="header-group">
+              <div class="header-col">Weight</div>
+              <div class="header-col">Reps</div>
+            </div>
           </div>
           ${[1, 2, 3].map(setNum => {
             const pastW = past[`s${setNum}_w`] !== undefined ? past[`s${setNum}_w`] : '';
