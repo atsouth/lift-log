@@ -27,14 +27,17 @@
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
     }
     
-    html, body {
+    html {
+      margin-top: -50px;
+      height: calc(100% + 50px);
       background-color: var(--bg);
-      margin: 0;
-      padding: 0;
     }
     
     body { 
-      padding: calc(env(safe-area-inset-top) + 24px) 16px calc(env(safe-area-inset-bottom) + 24px) 16px; 
+      background-color: var(--bg); 
+      color: var(--text); 
+      margin: 0; 
+      padding: calc(env(safe-area-inset-top) + 55px) 16px calc(env(safe-area-inset-bottom) + 24px) 16px; 
       -webkit-font-smoothing: antialiased;
     }
     
@@ -335,45 +338,16 @@
   </div>
 
   <script>
-    // CRITICAL: Insert your copied Google Web App API URL here
-    const API_URL = "https://script.google.com/macros/s/AKfycbwiWcrukbubhYvslWkSsVsAbecyq1iiv8Vg2ASFkOrzM5W-XzjwoEECjOCwwyyadSZP/exec";
+   // CONFIGURATION: Hardcode your compiled Apps Script macro deployment URL here
+    const API_URL = "https://script.google.com/macros/s/XXXXX_YOUR_DEPLOYMENT_ID_XXXXX/exec";
 
     const workoutRoutines = {
-      "Push A": [
-        "TechnoGym Chest Press [8-12]",
-        "TechnoGym Machine Flat Press [8-12]",
-        "Seated Machine Lateral Raises [12-15]",
-        "Overhead Cable Tricep Extensions [12-15]"
-      ],
-      "Pull A": [
-        "Wide Grip Lat Pulldowns [8-12]",
-        "Chest Supported Rows [8-12]",
-        "Reverse Pec Deck [12-15]",
-        "TechnoGym Preacher Curls [12-15]"
-      ],
-      "Legs A": [
-        "TechnoGym Leg Press [8-12]",
-        "TechnoGym Leg Extensions [12-15]",
-        "TechnoGym Leg Curls [12-15]",
-        "Machine Calf Raises [12-15]"
-      ],
-      "Push B": [
-        "TechnoGym Chest Press [8-12]",
-        "TechnoGym Pec Deck [12-15]",
-        "Seated Machine Lateral Raises [12-15]",
-        "Tricep Cable Pushdowns [12-15]"
-      ],
-      "Pull B": [
-        "Lawnmowers [12-15]",
-        "Narrow Reverse Grip Pulldowns [8-12]",
-        "Machine Preacher Curls [12-15]"
-      ],
-      "Legs B": [
-        "TechnoGym Leg Press [8-12]",
-        "Supported Split Squats [8-12]",
-        "TechnoGym Leg Curls [12-15]",
-        "Machine Calf Raises [12-15]"
-      ]
+      "Push A": ["TechnoGym Chest Press [8-12]", "TechnoGym Machine Flat Press [8-12]", "Seated Machine Lateral Raises [12-15]", "Overhead Cable Tricep Extensions [12-15]"],
+      "Pull A": ["Wide Grip Lat Pulldowns [8-12]", "Chest Supported Rows [8-12]", "Reverse Pec Deck [12-15]", "TechnoGym Preacher Curls [12-15]"],
+      "Legs A": ["TechnoGym Leg Press [8-12]", "TechnoGym Leg Extensions [12-15]", "TechnoGym Leg Curls [12-15]", "Machine Calf Raises [12-15]"],
+      "Push B": ["TechnoGym Chest Press [8-12]", "TechnoGym Pec Deck [12-15]", "Seated Machine Lateral Raises [12-15]", "Tricep Cable Pushdowns [12-15]"],
+      "Pull B": ["Lawnmowers [12-15]", "Narrow Reverse Grip Pulldowns [8-12]", "Machine Preacher Curls [12-15]"],
+      "Legs B": ["TechnoGym Leg Press [8-12]", "Supported Split Squats [8-12]", "TechnoGym Leg Curls [12-15]", "Machine Calf Raises [12-15]"]
     };
 
     let currentBlock = "";
@@ -388,36 +362,24 @@
       document.getElementById('loading').style.display = 'flex';
       currentBlock = blockName;
       
-      fetch(`${API_URL}?action=getPreviousSessionMetrics&blockName=${encodeURIComponent(blockName)}`)
+      fetch(`${API_URL}?action=getMetrics&blockName=${encodeURIComponent(blockName)}`)
         .then(response => response.json())
         .then(historyMap => {
           renderSessionPage(blockName, historyMap);
           document.getElementById('loading').style.display = 'none';
         })
         .catch(err => {
-          alert("Baseline synchronization failed. System operating offline.");
-          renderSessionPage(blockName, {});
+          alert("Error parsing execution matrix: " + err);
           document.getElementById('loading').style.display = 'none';
         });
     }
 
     function generateFriBadgeMarkup(friValue) {
       if (friValue === null || friValue === undefined || isNaN(friValue)) return '';
-      
-      let bgHex = '#E5E5EA';
-      let txtHex = '#48484A';
-      
-      if (friValue <= 0.70) {
-        bgHex = '#F8D7DA'; 
-        txtHex = '#842029';
-      } else if (friValue < 0.99) {
-        bgHex = '#FFF3CD'; 
-        txtHex = '#664D03';
-      } else {
-        bgHex = '#D1E7DD'; 
-        txtHex = '#0F5132';
-      }
-      
+      let bgHex = '#E5E5EA', txtHex = '#48484A';
+      if (friValue <= 0.70) { bgHex = '#F8D7DA'; txtHex = '#842029'; }
+      else if (friValue < 0.99) { bgHex = '#FFF3CD'; txtHex = '#664D03'; }
+      else { bgHex = '#D1E7DD'; txtHex = '#0F5132'; }
       return `<div class="fri-capsule" style="background-color: ${bgHex}; color: ${txtHex};">FRI: ${friValue.toFixed(2)}</div>`;
     }
 
@@ -430,14 +392,9 @@
       
       rawExercises.forEach((rawString, index) => {
         const exId = `ex_${index}`;
-        
-        let name = rawString;
-        let target = "8-12"; 
+        let name = rawString, target = "8-12"; 
         const match = rawString.match(/(.*?)\[(.*?)\]/);
-        if (match) {
-          name = match[1].trim();
-          target = match[2].trim();
-        }
+        if (match) { name = match[1].trim(); target = match[2].trim(); }
         
         const past = historyMap[name] || {};
         const friMarkup = generateFriBadgeMarkup(past.fri);
@@ -450,4 +407,113 @@
               <div class="exercise-title" data-rawname="${name}">${name}</div>
               <div class="badge-stack">
                 <div class="target-badge">Goal: ${target}</div>
-                ${friMarkup
+                ${friMarkup}
+              </div>
+            </div>
+          </div>
+          <div class="set-header">
+            <span style="width:45px;">Set</span>
+            <span style="flex:1; text-align:center;">Weight</span>
+            <span style="flex:1; text-align:center;">Reps</span>
+          </div>
+          ${[1, 2, 3].map(setNum => {
+            const pastW = past[`s${setNum}_w`] !== undefined ? past[`s${setNum}_w`] : '';
+            const pastR = past[`s${setNum}_r`] !== undefined ? past[`s${setNum}_r`] : '';
+            return `
+              <div class="set-row">
+                <div class="set-label">S${setNum}</div>
+                <div class="input-group">
+                  <input type="number" step="any" inputmode="decimal" id="${exId}_s${setNum}_w" placeholder="${pastW ? pastW + ' lbs' : 'lbs'}">
+                  <input type="number" inputmode="numeric" pattern="\\d*" id="${exId}_s${setNum}_r" placeholder="${pastR ? pastR + ' reps' : 'reps'}">
+                </div>
+              </div>
+            `;
+          }).join('')}
+        `;
+        container.appendChild(card);
+      });
+
+      document.querySelectorAll('#exercise-container input').forEach(input => {
+        input.value = localStorage.getItem(input.id) || '';
+        input.addEventListener('input', (e) => { localStorage.setItem(e.target.id, e.target.value); });
+      });
+
+      switchView('view-session');
+    }
+
+    function submitWorkout() {
+      const btn = document.getElementById('submit-btn');
+      btn.innerText = "Transmitting to Ledger...";
+      btn.disabled = true;
+
+      const cardNodes = document.querySelectorAll('#exercise-container .card');
+      const loggedExercises = [];
+
+      cardNodes.forEach((card, index) => {
+        const exId = `ex_${index}`;
+        const name = card.querySelector('.exercise-title').getAttribute('data-rawname');
+        loggedExercises.push({
+          name: name,
+          s1_w: document.getElementById(`${exId}_s1_w`).value,
+          s1_r: document.getElementById(`${exId}_s1_r`).value,
+          s2_w: document.getElementById(`${exId}_s2_w`).value,
+          s2_r: document.getElementById(`${exId}_s2_r`).value,
+          s3_w: document.getElementById(`${exId}_s3_w`).value,
+          s3_r: document.getElementById(`${exId}_s3_r`).value
+        });
+      });
+
+      const payload = {
+        action: "processWorkoutLog",
+        payload: { blockName: currentBlock, exercises: loggedExercises }
+      };
+
+      fetch(API_URL, {
+        method: "POST",
+        mode: "cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "Success") {
+          localStorage.clear();
+          switchView('view-success');
+        } else {
+          alert('Transmission error: ' + JSON.stringify(data));
+          btn.innerText = "Submit workout";
+          btn.disabled = false;
+        }
+      })
+      .catch(err => {
+        alert('Network transport failure: ' + err);
+        btn.innerText = "Submit workout";
+        btn.disabled = false;
+      });
+    }
+
+    function abortSession() { switchView('view-home'); }
+    function returnHome() {
+      const btn = document.getElementById('submit-btn');
+      btn.innerText = "Submit workout";
+      btn.disabled = false;
+      switchView('view-home');
+    }
+
+    // Initial Telemetry Fetch for UI Decoration
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch(`${API_URL}?action=getLastBlock`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.lastBlock) return;
+          document.querySelectorAll('.grid .block-card').forEach(card => {
+            if (card.textContent.trim() === data.lastBlock.trim()) {
+              card.classList.add('last-completed');
+            }
+          });
+        })
+        .catch(err => console.warn("Failed to fetch block telemetry context:", err));
+    });
+  </script>
+</body>
+</html>
