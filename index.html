@@ -200,7 +200,7 @@
     .theme-amber .widget-meta svg { fill: var(--vector-amber); }
     .theme-indigo .widget-meta svg { fill: var(--vector-indigo); }
 
-    /* WORKOUT VIEW & ENTRY LOG CARDS */
+    /* WORKOUT DETAIL VIEW LAYOUT */
     .workout-header-row {
       display: flex;
       justify-content: space-between;
@@ -233,14 +233,13 @@
       font-size: 17px;
       font-weight: 700;
       letter-spacing: -0.3px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
-    /* Micro Widget Inline Layout */
     .exercise-widgets-row {
       display: flex;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .micro-badge {
@@ -266,58 +265,73 @@
       font-size: 12px;
       color: var(--text-muted);
       font-weight: 500;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       background: rgba(0, 0, 0, 0.2);
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 8px;
+      border: 1px dashed rgba(255, 255, 255, 0.05);
     }
 
-    .sets-row {
+    /* VERTICAL SET ROW ENTRIES MATRIX */
+    .sets-vertical-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .set-ledger-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .set-input-group {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--card-border);
+      grid-template-columns: 55px 1fr 1fr;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
       border-radius: 10px;
-      padding: 8px;
-      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.04);
     }
 
-    .set-label {
-      font-size: 10px;
-      color: var(--text-muted);
+    .set-ledger-label {
+      font-size: 11px;
       font-weight: 700;
+      color: var(--text-muted);
       text-transform: uppercase;
-      margin-bottom: 4px;
     }
 
-    .inputs-split {
+    .input-wrapper {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 2px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 6px 10px;
     }
 
-    .inputs-split input {
-      width: 42px;
+    .input-wrapper input {
+      width: 100%;
       background: transparent;
       border: none;
       color: #ffffff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      text-align: center;
+      text-align: right;
+      padding-right: 4px;
     }
 
-    .inputs-split input:focus {
+    .input-wrapper input:focus {
       outline: none;
     }
 
-    .inputs-split span {
+    /* Chromium/Webkit spinner deletion rules */
+    .input-wrapper input::-webkit-outer-spin-button,
+    .input-wrapper input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .input-wrapper span {
+      font-size: 11px;
       color: var(--text-muted);
-      font-size: 12px;
+      font-weight: 600;
     }
 
     .btn-submit {
@@ -477,10 +491,10 @@
   </div>
 
   <script>
-    // HARDCODED ROUTING URL NODE TARGET
+    // CORE SCRIPT TARGET ENDPOINT
     const API_URL = "https://script.google.com/macros/s/AKfycbyHi1jr0Fcme-S-8GvnMZ40JZEW0J8mBnIYm-bRPG0hbBb37rYUgCO-zqPNcspNYh2w/exec";
 
-    // RESTORED ACCURATE TRACKING ARRAYS PER BLOCK
+    // MASTER WORKOUT STRUCT DEFINITION ARRAYS
     const WORKOUT_CONFIG = {
       "Push A": ["TechnoGym Chest Press [8-12]", "TechnoGym Machine Flat Press [8-12]", "Seated Machine Lateral Raises [12-15]", "Overhead Cable Tricep Extensions [12-15]"],
       "Pull A": ["Wide Grip Lat Pulldowns [8-12]", "Chest Supported Rows [8-12]", "Reverse Pec Deck [12-15]", "TechnoGym Preacher Curls [12-15]"],
@@ -524,7 +538,7 @@
     }
 
     /**
-     * WORKOUT CONTROLLER SWITCH: Dynamically hydrates input nodes and micro-widgets
+     * WORKOUT CONTROLLER OVERHAUL: Strips config keys and outputs horizontal ledgers sequentially
      */
     function openWorkout(blockName) {
       currentBlockName = blockName;
@@ -544,22 +558,17 @@
           exercises.forEach((exName) => {
             const hist = historyMap[exName] || { s1_w:"", s1_r:"", s2_w:"", s2_r:"", s3_w:"", s3_r:"", fri: null };
             
-            // DYNAMIC METRIC EXTRACTORS
-            // Goal Reps targets standard baseline or references previous Set 1 volume output
-            let goalRepsDisplay = "8-12";
-            if (hist.s1_r) {
-              const baseReps = parseInt(hist.s1_r);
-              goalRepsDisplay = isNaN(baseReps) ? "8-12" : `${baseReps}`;
-            }
+            // Linear string replacement to pull parameters cleanly out of brackets
+            const matchReps = exName.match(/\[(.*?)\]/);
+            const goalRepsDisplay = matchReps ? matchReps[1] : "8-12";
+            const cleanDisplayTitle = exName.replace(/\s*\[.*?\]/, '').trim();
 
-            // Fatigue Readiness Index (FRI) structural parsing
             let friDisplay = "--";
             if (hist.fri !== undefined && hist.fri !== null && hist.fri !== "") {
               const parsedFri = parseFloat(hist.fri);
               friDisplay = isNaN(parsedFri) ? "--" : parsedFri.toFixed(2);
             }
 
-            // Raw structural configuration string
             let historyString = "No tracked session logs found.";
             if (hist.s1_w || hist.s2_w || hist.s3_w) {
               historyString = `Last: ${hist.s1_w || '0'}lbs x ${hist.s1_r || '0'}r | ${hist.s2_w || '0'}lbs x ${hist.s2_r || '0'}r | ${hist.s3_w || '0'}lbs x ${hist.s3_r || '0'}r`;
@@ -568,7 +577,7 @@
             const card = document.createElement('div');
             card.className = 'exercise-card';
             card.innerHTML = `
-              <div class="exercise-title">${exName}</div>
+              <div class="exercise-title">${cleanDisplayTitle}</div>
               
               <div class="exercise-widgets-row">
                 <div class="micro-badge">Goal Reps: <span>${goalRepsDisplay}</span></div>
@@ -577,31 +586,44 @@
 
               <div class="exercise-history">${historyString}</div>
               
-              <div class="sets-row" data-exname="${exName}">
-                <div class="set-input-group">
-                  <div class="set-label">Set 1</div>
-                  <div class="inputs-split">
-                    <input type="number" step="any" class="input-w" placeholder="${hist.s1_w || 'lbs'}">
-                    <span>/</span>
-                    <input type="number" class="input-r" placeholder="${hist.s1_r || 'reps'}">
+              <div class="sets-vertical-container" data-exname="${exName}">
+                
+                <div class="set-ledger-row">
+                  <div class="set-ledger-label">Set 1</div>
+                  <div class="input-wrapper">
+                    <input type="number" step="any" class="input-w" placeholder="${hist.s1_w || '—'}">
+                    <span>lbs</span>
+                  </div>
+                  <div class="input-wrapper">
+                    <input type="number" class="input-r" placeholder="${hist.s1_r || '—'}">
+                    <span>reps</span>
                   </div>
                 </div>
-                <div class="set-input-group">
-                  <div class="set-label">Set 2</div>
-                  <div class="inputs-split">
-                    <input type="number" step="any" class="input-w" placeholder="${hist.s2_w || 'lbs'}">
-                    <span>/</span>
-                    <input type="number" class="input-r" placeholder="${hist.s2_r || 'reps'}">
+
+                <div class="set-ledger-row">
+                  <div class="set-ledger-label">Set 2</div>
+                  <div class="input-wrapper">
+                    <input type="number" step="any" class="input-w" placeholder="${hist.s2_w || '—'}">
+                    <span>lbs</span>
+                  </div>
+                  <div class="input-wrapper">
+                    <input type="number" class="input-r" placeholder="${hist.s2_r || '—'}">
+                    <span>reps</span>
                   </div>
                 </div>
-                <div class="set-input-group">
-                  <div class="set-label">Set 3</div>
-                  <div class="inputs-split">
-                    <input type="number" step="any" class="input-w" placeholder="${hist.s3_w || 'lbs'}">
-                    <span>/</span>
-                    <input type="number" class="input-r" placeholder="${hist.s3_r || 'reps'}">
+
+                <div class="set-ledger-row">
+                  <div class="set-ledger-label">Set 3</div>
+                  <div class="input-wrapper">
+                    <input type="number" step="any" class="input-w" placeholder="${hist.s3_w || '—'}">
+                    <span>lbs</span>
+                  </div>
+                  <div class="input-wrapper">
+                    <input type="number" class="input-r" placeholder="${hist.s3_r || '—'}">
+                    <span>reps</span>
                   </div>
                 </div>
+
               </div>
             `;
             container.appendChild(card);
@@ -615,16 +637,16 @@
     }
 
     /**
-     * INGESTION POST HANDLER: Collects inputs and transmits log arrays to the backend router
+     * TRANSFERS LOG MATRICES: Serializes entry blocks relative to the unparsed structural config key
      */
     function submitWorkoutLog() {
-      const rows = document.querySelectorAll('.sets-row');
+      const containers = document.querySelectorAll('.sets-vertical-container');
       const exercisesPayload = [];
       
-      rows.forEach(row => {
-        const name = row.getAttribute('data-exname');
-        const wInputs = row.querySelectorAll('.input-w');
-        const rInputs = row.querySelectorAll('.input-r');
+      containers.forEach(container => {
+        const name = container.getAttribute('data-exname');
+        const wInputs = container.querySelectorAll('.input-w');
+        const rInputs = container.querySelectorAll('.input-r');
         
         exercisesPayload.push({
           name: name,
