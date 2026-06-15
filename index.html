@@ -66,11 +66,11 @@
       letter-spacing: normal;
     }
 
-    /* VIEW MANAGEMENT CONTROLLERS */
+    /* CODES CONTROL */
     .view-container { display: block; }
     .view-container.hidden { display: none; }
 
-    /* DASHBOARD OVERVIEW SPLIT SPACES */
+    /* HUD PANELS SPATIAL GRIDS */
     .workout-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -110,7 +110,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* BIOMETRIC INDICATORS HUD PANELS */
+    /* COMPOSITION STATS GRID WIDGETS */
     .widget-matrix {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -187,7 +187,7 @@
     .theme-amber .widget-meta svg { fill: var(--vector-amber); }
     .theme-indigo .widget-meta svg { fill: var(--vector-indigo); }
 
-    /* WORKOUT ENTRY HUD OVERHAUL */
+    /* SCALED WORKOUT LIST CARD ARRAYS */
     .workout-header-row {
       display: flex;
       justify-content: space-between;
@@ -210,31 +210,31 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 18px;
-      padding: 18px;
+      padding: 20px;
       margin-bottom: 16px;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
 
     .exercise-title {
-      font-size: 18px;
+      font-size: 20px; /* Scaled text size */
       font-weight: 700;
-      letter-spacing: -0.3px;
-      margin-bottom: 10px;
+      letter-spacing: -0.4px;
+      margin-bottom: 12px;
     }
 
     .exercise-widgets-row {
       display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
+      gap: 10px;
+      margin-bottom: 18px;
     }
 
     .micro-badge {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--card-border);
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 13px; /* Enhanced badge sizing */
       font-weight: 600;
       color: var(--text-muted);
     }
@@ -242,7 +242,6 @@
     .micro-badge span { color: #ffffff; font-weight: 700; }
     .micro-badge.highlight span { color: var(--vector-teal); }
 
-    /* ERGONOMIC LABELS AND TALL INPUT CELLS */
     .sets-vertical-container {
       display: flex;
       flex-direction: column;
@@ -251,7 +250,7 @@
 
     .set-ledger-row {
       display: grid;
-      grid-template-columns: 60px 1fr 1fr;
+      grid-template-columns: 65px 1fr 1fr;
       align-items: center;
       gap: 12px;
       background: rgba(0, 0, 0, 0.35);
@@ -261,7 +260,7 @@
     }
 
     .set-ledger-label {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -274,8 +273,8 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      padding: 10px 12px;
-      height: 46px; /* Scaled touch target height */
+      padding: 10px 14px;
+      height: 48px; /* Taller tactile click area */
     }
 
     .input-wrapper input {
@@ -283,7 +282,7 @@
       background: transparent;
       border: none;
       color: #ffffff;
-      font-size: 17px;
+      font-size: 18px; /* High legibility numbers */
       font-weight: 700;
       text-align: right;
       padding-right: 6px;
@@ -294,7 +293,7 @@
     .input-wrapper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
     .input-wrapper span {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-muted);
       font-weight: 600;
     }
@@ -304,12 +303,12 @@
       background: var(--vector-teal);
       color: #000000;
       border: none;
-      padding: 16px;
+      padding: 18px;
       border-radius: 14px;
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 700;
-      margin-top: 10px;
-      margin-bottom: 30px;
+      margin-top: 12px;
+      margin-bottom: 35px;
       cursor: pointer;
     }
 
@@ -452,7 +451,7 @@
 
   <script>
     // HARDCODED ROUTING URL NODE TARGET
-    const API_URL = "https://script.google.com/macros/s/AKfycbxDXEXDDF6aAZOMcd_LQ3wGNHOFDvH6x4S4SBHQjYRr_zlEShVx-tLmiZt1ekf5eapk/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbypfHhhxJhALw0k5Y8_GgTbslvEb5XSyYjRiT1oekqjvE5Es3yALai5gJoFNnFrbnb7/exec";
 
     const WORKOUT_CONFIG = {
       "Push A": ["TechnoGym Chest Press [8-12]", "TechnoGym Machine Flat Press [8-12]", "Seated Machine Lateral Raises [12-15]", "Overhead Cable Tricep Extensions [12-15]"],
@@ -508,7 +507,7 @@
             const goalRepsDisplay = matchReps ? matchReps[1] : "8-12";
             const cleanDisplayTitle = exName.replace(/\s*\[.*?\]/, '').trim();
 
-            // Client Alphanumeric normalizer handshake logic
+            // Client-side key generation targeting normalized hash structures
             const normKey = cleanDisplayTitle.toLowerCase().replace(/[^a-z0-9]/g, '');
             const hist = historyMap[normKey] || { s1_w:"", s1_r:"", s2_w:"", s2_r:"", s3_w:"", s3_r:"", fri: "" };
 
@@ -521,7 +520,7 @@
             const card = document.createElement('div');
             card.className = 'exercise-card';
             
-            // Native Focus Injection filters to wipe text nodes from input spaces instantly on touch/click
+            // Layout construction with focus handlers that clear placeholder strings on selection
             card.innerHTML = `
               <div class="exercise-title">${cleanDisplayTitle}</div>
               <div class="exercise-widgets-row">
@@ -529,7 +528,7 @@
                 <div class="micro-badge highlight">FRI: <span>${friDisplay}</span></div>
               </div>
               
-              <div class="sets-vertical-container" data-exname="${exName}">
+              <div class="sets-vertical-container" data-exname="${cleanDisplayTitle}">
                 <div class="set-ledger-row">
                   <div class="set-ledger-label">Set 1</div>
                   <div class="input-wrapper">
@@ -580,7 +579,7 @@
       const exercisesPayload = [];
       
       containers.forEach(container => {
-        const name = container.getAttribute('data-exname'); // Collects original bracket key configuration
+        const cleanName = container.getAttribute('data-exname'); // Collects and passes clean standard string
         const wInputs = container.querySelectorAll('.input-w');
         const rInputs = container.querySelectorAll('.input-r');
         
@@ -592,7 +591,7 @@
         };
 
         exercisesPayload.push({
-          name: name, 
+          name: cleanName, 
           s1_w: getVal(wInputs[0]), s1_r: getVal(rInputs[0]),
           s2_w: getVal(wInputs[1]), s2_r: getVal(rInputs[1]),
           s3_w: getVal(wInputs[2]), s3_r: getVal(rInputs[2])
