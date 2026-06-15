@@ -1,317 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-  
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  
-  <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230A84FF'><path d='M7 5h2v14H7V5zm8 0h2v14h-2V5zM4 9h3v6H4V9zm13 0h3v6h-3V9zM1 11h3v2H1v-2zm20 0h3v2h-3v-2zM8 9h8v6H8V9z'/></svg>">
+  <link class="apple-touch-icon" rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230A84FF'><path d='M7 5h2v14H7V5zm8 0h2v14h-2V5zM4 9h3v6H4V9zm13 0h3v6h-3V9zM1 11h3v2H1v-2zm20 0h3v2h-3v-2zM8 9h8v6H8V9z'/></svg>">
   
   <style>
     :root { 
-      --bg: #F2F2F7; /* iOS System Light Gray Canvas */
-      --card: #FFFFFF; /* Pure White Premium Elevations */
-      --card-elevated: #E5E5EA; /* Tactile Press State Well */
-      --accent: #34C759; /* iOS Pure Green */
-      --primary-btn: #007AFF; /* Vibrant iOS Cobalt Blue */
-      --text: #000000; /* Deep Obsidian Typography */
-      --muted: #8E8E93; /* System Subtext Slate */
-      --border: rgba(0, 0, 0, 0.06); /* Ultrafine Hairline Dividers */
-      --badge-bg: #E5E5EA;
-      --badge-txt: #48484A;
-    }
-    
-    * { 
-      box-sizing: border-box; 
-      -webkit-tap-highlight-color: transparent; 
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
-    }
-    
-    html {
-      margin-top: -50px;
-      height: calc(100% + 50px);
-      background-color: var(--bg);
-    }
-    
-    body { 
-      background-color: var(--bg); 
-      color: var(--text); 
-      margin: 0; 
-      padding: calc(env(safe-area-inset-top) + 55px) 16px calc(env(safe-area-inset-bottom) + 24px) 16px; 
-      -webkit-font-smoothing: antialiased;
-    }
-    
-    .view { display: none; }
-    .view.active { display: block; animation: iOS-SlideUp 0.3s cubic-bezier(0.25, 1, 0.5, 1); }
-    
-    @keyframes iOS-SlideUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    h1 { 
-      font-size: 34px; 
-      font-weight: 800; 
-      letter-spacing: -0.6px; 
-      margin: 12px 0 4px 0; 
-      color: var(--text);
-    }
-    
-    .subtitle { 
-      color: var(--muted); 
-      font-size: 16px; 
-      font-weight: 400;
-      letter-spacing: -0.2px;
-      margin-bottom: 24px; 
-    }
-    
-    .grid { 
-      display: grid; 
-      grid-template-rows: repeat(3, auto); 
-      grid-template-columns: 1fr 1fr;     
-      grid-auto-flow: column;             
-      gap: 14px; 
-      margin-top: 16px; 
-    }
-    
-    .block-card { 
-      background-color: var(--card); 
-      border: 1px solid var(--border); 
-      border-radius: 16px; 
-      padding: 24px 16px; 
-      text-align: center; 
-      font-size: 18px; 
-      font-weight: 700; 
-      letter-spacing: -0.3px;
-      color: var(--text);
-      cursor: pointer; 
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-      transition: transform 0.1s ease, background-color 0.1s ease;
-    }
-    .block-card:active { 
-      transform: scale(0.96);
-      background-color: var(--card-elevated); 
+      --bg: #F2F2F7;
+      --card: #FFFFFF;
+      --card-elevated: #E5E5EA;
+      --accent: #34C759;
+      --primary-btn: #007AFF;
+      --text: #000000;
+      --muted: #8E8E93;
     }
 
-    .block-card.last-completed {
-      border: 1px solid rgba(255, 149, 0, 0.4) !important; 
-      background: linear-gradient(135deg, #FFFFFF 0%, #FFF9F2 100%) !important;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 38px 16px 18px 16px !important;
-      box-shadow: 0 6px 16px rgba(255, 149, 0, 0.06);
-    }
-
-    .block-card.last-completed::after {
-      content: "LAST WORKOUT";
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%); 
-      font-size: 10px;
-      font-weight: 800;
-      color: #FF9500;
-      letter-spacing: 0.06em;
-      background: rgba(255, 149, 0, 0.12);
-      padding: 3px 8px;
-      border-radius: 6px;
-      white-space: nowrap; 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding: 20px; padding-top: calc(20px + env(safe-area-inset-top)); padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
     
-    .card { 
-      background-color: var(--card); 
-      border-radius: 20px; 
-      padding: 20px; 
-      margin-bottom: 16px; 
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-    }
+    .view { display: none; max-width: 500px; margin: 0 auto; }
+    .view.active { display: block; }
     
-    .card-header-row { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: flex-start; 
-      margin-bottom: 16px; 
-      gap: 12px; 
-    }
+    h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 24px; text-align: left; color: var(--text); }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 30px; }
     
-    .title-area {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-    }
+    .block-card { background: var(--card); border-radius: 14px; padding: 20px; text-align: center; font-size: 17px; font-weight: 600; color: var(--primary-btn); box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.1s ease, background-color 0.1s ease; cursor: pointer; }
+    .block-card:active { background-color: var(--card-elevated); transform: scale(0.97); }
+    .block-card.last-completed { border: 2px solid var(--accent); position: relative; }
+    .block-card.last-completed::after { content: "LATEST"; position: absolute; top: -8px; right: 8px; background: var(--accent); color: white; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 8px; letter-spacing: 0.5px; }
     
-    .exercise-title { 
-      font-size: 19px; 
-      font-weight: 700; 
-      letter-spacing: -0.4px;
-      color: var(--text); 
-      margin: 0; 
-    }
+    .card { background: var(--card); border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
     
-    .badge-stack {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-    }
+    .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; position: relative; }
+    .title-area { flex: 1; padding-right: 8px; }
+    .exercise-title { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 6px; line-height: 1.3; }
     
-    .target-badge, .fri-capsule { 
-      font-size: 12px; 
-      font-weight: 700; 
-      padding: 4px 8px; 
-      border-radius: 6px; 
-      white-space: nowrap; 
-    }
-
-    .target-badge {
-      background-color: var(--badge-bg); 
-      color: var(--badge-txt); 
-    }
+    .badge-stack { display: flex; gap: 6px; align-items: center; }
+    .target-badge { background-color: rgba(0,122,255,0.1); color: var(--primary-btn); font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-block; }
+    .fri-capsule { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; display: inline-block; text-transform: uppercase; letter-spacing: 0.3px; }
     
-    .set-header { 
-      display: flex; 
-      color: var(--muted); 
-      font-size: 11px; 
-      font-weight: 700; 
-      text-transform: uppercase; 
-      letter-spacing: 0.6px;
-      margin-bottom: 8px; 
-      padding-left: 4px; 
-    }
+    .sparkline-wrapper { width: 120px; height: 42px; position: relative; background: rgba(242,242,247,0.5); border-radius: 8px; overflow: hidden; padding: 2px; }
+    .sparkline-svg { width: 100%; height: 100%; }
     
-    .set-row { 
-      display: flex; 
-      align-items: center; 
-      margin-bottom: 10px; 
-    }
+    .set-header { display: flex; color: var(--muted); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 6px; border-bottom: 0.5px solid var(--card-elevated); margin-bottom: 10px; }
+    .set-row { display: flex; align-items: center; margin-bottom: 10px; }
     .set-row:last-child { margin-bottom: 0; }
+    .set-label { width: 45px; font-size: 15px; font-weight: 600; color: var(--muted); }
+    .input-group { flex: 1; display: flex; gap: 10px; }
     
-    .set-label { 
-      width: 42px; 
-      font-size: 15px; 
-      color: var(--muted); 
-      font-weight: 700; 
-    }
+    input { flex: 1; background: var(--bg); border: none; border-radius: 10px; height: 42px; text-align: center; font-size: 16px; font-weight: 500; color: var(--text); outline: none; transition: background 0.15s; }
+    input:focus { background: #E5E5EA; }
+    input::placeholder { color: var(--muted); font-weight: 400; font-size: 14px; }
     
-    .input-group { 
-      flex: 1; 
-      display: flex; 
-      gap: 10px; 
-    }
+    .action-btn { width: 100%; height: 50px; border-radius: 14px; border: none; font-size: 17px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: background 0.15s, transform 0.1s; }
+    .action-btn:active { transform: scale(0.98); }
+    .btn-submit { background: var(--primary-btn); color: white; margin-top: 20px; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
+    .btn-submit:disabled { background: var(--muted); box-shadow: none; opacity: 0.7; cursor: not-allowed; }
+    .btn-abort { background: transparent; color: #FF3B30; margin-top: 14px; font-weight: 500; }
     
-    input { 
-      flex: 1; 
-      width: 50%; 
-      background-color: #F2F2F7; 
-      border: 1px solid transparent; 
-      border-radius: 12px; 
-      color: var(--text); 
-      padding: 14px 10px; 
-      font-size: 17px; 
-      font-weight: 600;
-      text-align: center; 
-      -webkit-appearance: none; 
-      transition: border-color 0.15s ease, background-color 0.15s ease;
-    }
-    input:focus { 
-      border-color: var(--primary-btn); 
-      outline: none; 
-      background-color: #FFFFFF; 
-      box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
-    }
-    input::placeholder { 
-      color: #AEAEB2; 
-      opacity: 1; 
-      font-size: 15px; 
-      font-weight: 400;
-    }
+    .spinner { width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #ffffff; animation: spin 0.8s linear infinite; display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
     
-    .btn { 
-      width: 100%; 
-      background-color: var(--primary-btn); 
-      color: white; 
-      border: none; 
-      border-radius: 16px; 
-      padding: 18px; 
-      font-size: 17px; 
-      font-weight: 700; 
-      letter-spacing: -0.2px;
-      margin: 24px 0 0 0; 
-      cursor: pointer; 
-      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
-      transition: transform 0.1s ease, background-color 0.1s ease;
-    }
-    .btn:active { 
-      transform: scale(0.97); 
-      background-color: #0066D6;
-    }
-    .btn:disabled { 
-      background-color: #D1D1D6; 
-      color: #8E8E93; 
-      box-shadow: none;
-      transform: none !important;
-    }
+    #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(242,242,247,0.85); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; gap: 12px; }
+    .global-spinner { width: 32px; height: 32px; border: 3.5px solid rgba(0,122,255,0.15); border-radius: 50%; border-top-color: var(--primary-btn); animation: spin 0.8s linear infinite; }
+    .loading-text { font-size: 15px; font-weight: 600; color: var(--muted); letter-spacing: -0.2px; }
     
-    .btn-secondary { 
-      background-color: #FFFFFF; 
-      border: 1px solid rgba(255, 59, 48, 0.2); 
-      color: #FF3B30; 
-      margin-top: 12px; 
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-    }
-    .btn-secondary:active {
-      background-color: #FFE5E5;
-      border-color: #FF3B30;
-    }
-    
-    .success-screen { 
-      text-align: center; 
-      padding: 100px 24px 24px 24px; 
-    }
-    
-    .success-icon { 
-      font-size: 80px; 
-      color: var(--accent); 
-      margin-bottom: 24px; 
-      animation: nativePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    
-    @keyframes nativePop {
-      0% { transform: scale(0.4); opacity: 0; }
-      10% { transform: scale(0.4); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    
-    .loading-overlay { 
-      display: none; 
-      position: fixed; 
-      top: 0; left: 0; right: 0; bottom: 0; 
-      background: rgba(255,255,255,0.9); 
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      justify-content: center; 
-      align-items: center; 
-      z-index: 1000; 
-      font-size: 16px;
-      font-weight: 700; 
-      letter-spacing: -0.2px;
-      color: #000000;
-    }
+    .success-view { text-align: center; padding-top: 60px; }
+    .success-icon { width: 72px; height: 72px; background: rgba(52,199,89,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 24px; color: var(--accent); }
+    .success-view h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .success-view p { color: var(--muted); font-size: 16px; margin-bottom: 32px; }
   </style>
 </head>
 <body>
 
-  <div id="loading" class="loading-overlay">Syncing Performance Continuum...</div>
+  <div id="loading">
+    <div class="global-spinner"></div>
+    <div class="loading-text">Synchronizing Ledger Ecosystem</div>
+  </div>
 
   <div id="view-home" class="view active">
-    <h1>Workout Blocks</h1>
-    <div class="subtitle">Select the focus of today's workout:</div>
-    
+    <h1>Lifting Log</h1>
     <div class="grid">
       <div class="block-card" onclick="initializeSession('Push A')">Push A</div>
       <div class="block-card" onclick="initializeSession('Pull A')">Pull A</div>
@@ -323,22 +92,25 @@
   </div>
 
   <div id="view-session" class="view">
-    <h1 id="session-title">Workout Vector</h1>
-    <div class="subtitle">Placeholders populate absolute latest execution metrics.</div>
+    <h1 id="session-title">Workout</h1>
     <div id="exercise-container"></div>
-    <button id="submit-btn" class="btn" onclick="submitWorkout()">Submit workout</button>
-    <button class="btn btn-secondary" onclick="abortSession()">Return to Dashboard</button>
+    <button class="action-btn btn-submit" id="submit-btn" onclick="submitWorkout()">
+      <div class="spinner" id="btn-spinner"></div>
+      <span id="btn-text">Submit Workout</span>
+    </button>
+    <button class="action-btn btn-abort" onclick="abortSession()">Abort Session</button>
   </div>
 
-  <div id="view-success" class="view success-screen">
-    <div class="success-icon">✓</div>
-    <h2>Data Append Complete</h2>
-    <div class="subtitle" style="margin-bottom: 40px;">Metrics successfully written to the operational ledger.</div>
-    <button class="btn" onclick="returnHome()">Return to Dashboard</button>
+  <div id="view-success" class="view success-view">
+    <div class="success-icon">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <h2>Session Logged Successfully</h2>
+    <p>Metrics committed to master data array.</p>
+    <button class="action-btn btn-submit" onclick="returnHome()">Return Home</button>
   </div>
 
   <script>
-   // CONFIGURATION: Hardcode your compiled Apps Script macro deployment URL here
     const API_URL = "https://script.google.com/macros/s/AKfycbxNqsSq9nkmVT7Tz5UXpsbZX9WDTZmt1Fex7XQzwk7YXJ4s2KaogncsJBJpDFdO_rDo/exec";
 
     const workoutRoutines = {
@@ -358,43 +130,17 @@
       window.scrollTo(0,0);
     }
 
-    /**
-     * DYNAMIC JSONP TRANSPORT CONTROLLER
-     * Injects temporary script nodes to completely bypass client CORS restrictions on Reads
-     */
     function requestJSONP(action, params = {}) {
       return new Promise((resolve, reject) => {
         const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
         let url = `${API_URL}?action=${action}&`;
-        
-        for (let key in params) {
-          url += `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}&`;
-        }
-        
+        for (let key in params) { url += `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}&`; }
         const script = document.createElement('script');
         script.src = `${url}callback=${callbackName}`;
-        
-        const timeoutId = setTimeout(() => {
-          cleanup();
-          reject(new TypeError("Database pipeline latency timeout"));
-        }, 10000);
-        
-        function cleanup() {
-          clearTimeout(timeoutId);
-          if (script.parentNode) script.parentNode.removeChild(script);
-          delete window[callbackName];
-        }
-        
-        window[callbackName] = (data) => {
-          cleanup();
-          resolve(data);
-        };
-        
-        script.onerror = () => {
-          cleanup();
-          reject(new TypeError("Failed to compile script stream resource"));
-        };
-        
+        const timeoutId = setTimeout(() => { cleanup(); reject(new TypeError("Database pipeline latency timeout")); }, 10000);
+        function cleanup() { clearTimeout(timeoutId); if (script.parentNode) script.parentNode.removeChild(script); delete window[callbackName]; }
+        window[callbackName] = (data) => { cleanup(); resolve(data); };
+        script.onerror = () => { cleanup(); reject(new TypeError("Failed to compile script stream resource")); };
         document.body.appendChild(script);
       });
     }
@@ -441,6 +187,7 @@
         
         const card = document.createElement('div');
         card.className = 'card';
+        card.setAttribute('data-exid', exId);
         card.innerHTML = `
           <div class="card-header-row">
             <div class="title-area">
@@ -449,6 +196,21 @@
                 <div class="target-badge">Goal: ${target}</div>
                 ${friMarkup}
               </div>
+            </div>
+            <div class="sparkline-wrapper">
+              <svg class="sparkline-svg" id="svg_${exId}" viewBox="0 0 120 40" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="grad_${exId}" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#34C759" stop-opacity="0.4"/>
+                    <stop offset="100%" stop-color="#34C759" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <path class="spark-fill" id="fill_${exId}" fill="url(#grad_${exId})" d="M 10 38 L 60 38 L 110 38 Z" opacity="0"/>
+                <path class="spark-line" id="line_${exId}" fill="none" stroke="#8E8E93" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M 10 35 L 60 35 L 110 35"/>
+                <circle id="dot_${exId}_1" cx="10" cy="35" r="3" fill="#8E8E93" />
+                <circle id="dot_${exId}_2" cx="60" cy="35" r="3" fill="#8E8E93" />
+                <circle id="dot_${exId}_3" cx="110" cy="35" r="3" fill="#8E8E93" />
+              </svg>
             </div>
           </div>
           <div class="set-header">
@@ -463,8 +225,8 @@
               <div class="set-row">
                 <div class="set-label">S${setNum}</div>
                 <div class="input-group">
-                  <input type="number" step="any" inputmode="decimal" id="${exId}_s${setNum}_w" placeholder="${pastW ? pastW + ' lbs' : 'lbs'}">
-                  <input type="number" inputmode="numeric" pattern="\\d*" id="${exId}_s${setNum}_r" placeholder="${pastR ? pastR + ' reps' : 'reps'}">
+                  <input type="number" step="any" inputmode="decimal" class="input-w" id="${exId}_s${setNum}_w" placeholder="${pastW ? pastW + ' lbs' : 'lbs'}">
+                  <input type="number" inputmode="numeric" pattern="\\d*" class="input-r" id="${exId}_s${setNum}_r" placeholder="${pastR ? pastR + ' reps' : 'reps'}">
                 </div>
               </div>
             `;
@@ -475,26 +237,100 @@
 
       document.querySelectorAll('#exercise-container input').forEach(input => {
         input.value = localStorage.getItem(input.id) || '';
-        input.addEventListener('input', (e) => { localStorage.setItem(e.target.id, e.target.value); });
+        input.addEventListener('input', (e) => { 
+          localStorage.setItem(e.target.id, e.target.value);
+          calculateCardDecayCurve(e.target.closest('.card'));
+        });
       });
+
+      document.querySelectorAll('#exercise-container .card').forEach(card => calculateCardDecayCurve(card));
 
       switchView('view-session');
     }
 
-    /**
-     * OPAQUE WRITE DATA SYSTEM
-     * Dispatches POST payload via no-cors mode, executing sheet updates while bypassing redirect validation rules
-     */
+    function calculateCardDecayCurve(card) {
+      const exId = card.getAttribute('data-exid');
+      
+      const w1 = parseFloat(document.getElementById(`${exId}_s1_w`).value) || 0;
+      const r1 = parseFloat(document.getElementById(`${exId}_s1_r`).value) || 0;
+      const w2 = parseFloat(document.getElementById(`${exId}_s2_w`).value) || 0;
+      const r2 = parseFloat(document.getElementById(`${exId}_s2_r`).value) || 0;
+      const w3 = parseFloat(document.getElementById(`${exId}_s3_w`).value) || 0;
+      const r3 = parseFloat(document.getElementById(`${exId}_s3_r`).value) || 0;
+
+      const e1 = r1 > 0 ? w1 * (1 + r1 / 30) : 0;
+      const e2 = r2 > 0 ? w2 * (1 + r2 / 30) : 0;
+      const e3 = r3 > 0 ? w3 * (1 + r3 / 30) : 0;
+
+      const lineEl = document.getElementById(`line_${exId}`);
+      const fillEl = document.getElementById(`fill_${exId}`);
+      const gradStop1 = document.querySelector(`#grad_${exId} stop:nth-child(1)`);
+      const gradStop2 = document.querySelector(`#grad_${exId} stop:nth-child(2)`);
+      const d1 = document.getElementById(`dot_${exId}_1`);
+      const d2 = document.getElementById(`dot_${exId}_2`);
+      const d3 = document.getElementById(`dot_${exId}_3`);
+
+      if (e1 === 0 && e2 === 0 && e3 === 0) {
+        lineEl.setAttribute('d', "M 10 20 L 60 20 L 110 20");
+        fillEl.setAttribute('opacity', '0');
+        return;
+      }
+
+      const maxE1RM = Math.max(e1, e2, e3);
+      
+      const normalizeY = (val) => {
+        if (val === 0) return 35;
+        return 32 - ((val / maxE1RM) * 22);
+      };
+
+      const y1 = normalizeY(e1);
+      const y2 = e2 > 0 ? normalizeY(e2) : y1;
+      const y3 = e3 > 0 ? normalizeY(e3) : y2;
+
+      const x1 = 15, x2 = 60, x3 = 105;
+
+      const cpsX1 = (x1 + x2) / 2;
+      const cpsX2 = (x2 + x3) / 2;
+      const pathDefinition = `M ${x1} ${y1} C ${cpsX1} ${y1}, ${cpsX1} ${y2}, ${x2} ${y2} C ${cpsX2} ${y2}, ${cpsX2} ${y3}, ${x3} ${y3}`;
+      
+      lineEl.setAttribute('d', pathDefinition);
+      fillEl.setAttribute('d', `${pathDefinition} L ${x3} 38 L ${x1} 38 Z`);
+      fillEl.setAttribute('opacity', '1');
+
+      d1.setAttribute('cy', y1); d1.setAttribute('fill', e1 > 0 ? 'var(--primary-btn)' : '#8E8E93');
+      d2.setAttribute('cy', y2); d2.setAttribute('fill', e2 > 0 ? 'var(--primary-btn)' : '#8E8E93');
+      d3.setAttribute('cy', y3); d3.setAttribute('fill', e3 > 0 ? 'var(--primary-btn)' : '#8E8E93');
+
+      if (e1 > 0 && e3 > 0) {
+        const decayRatio = e3 / e1;
+        let colorTheme = '#34C759';
+        if (decayRatio <= 0.75) colorTheme = '#FF3B30';
+        else if (decayRatio < 0.94) colorTheme = '#FF9500';
+        
+        lineEl.setAttribute('stroke', colorTheme);
+        gradStop1.setAttribute('stop-color', colorTheme);
+        gradStop2.setAttribute('stop-color', colorTheme);
+      } else {
+        lineEl.setAttribute('stroke', '#007AFF');
+        gradStop1.setAttribute('stop-color', '#007AFF');
+        gradStop2.setAttribute('stop-color', '#007AFF');
+      }
+    }
+
     function submitWorkout() {
       const btn = document.getElementById('submit-btn');
-      btn.innerText = "Transmitting to Ledger...";
+      const spinner = document.getElementById('btn-spinner');
+      const btnText = document.getElementById('btn-text');
+      
       btn.disabled = true;
+      spinner.style.display = 'block';
+      btnText.innerText = "Transmitting Data Matrix...";
 
       const cardNodes = document.querySelectorAll('#exercise-container .card');
       const loggedExercises = [];
 
-      cardNodes.forEach((card, index) => {
-        const exId = `ex_${index}`;
+      cardNodes.forEach((card) => {
+        const exId = card.getAttribute('data-exid');
         const name = card.querySelector('.exercise-title').getAttribute('data-rawname');
         loggedExercises.push({
           name: name,
@@ -520,27 +356,26 @@
       })
       .then(() => {
         localStorage.clear();
+        spinner.style.display = 'none';
+        btnText.innerText = "Submit Workout";
+        btn.disabled = false;
         switchView('view-success');
       })
       .catch(err => {
         alert('Network transport failure: ' + err);
-        btn.innerText = "Submit workout";
+        spinner.style.display = 'none';
+        btnText.innerText = "Submit Workout";
         btn.disabled = false;
       });
     }
 
     function abortSession() { switchView('view-home'); }
-    function returnHome() {
-      const btn = document.getElementById('submit-btn');
-      btn.innerText = "Submit workout";
-      btn.disabled = false;
-      switchView('view-home');
-    }
+    function returnHome() { switchView('view-home'); }
 
-    // TELEMETRY RECOVERY VIA JSONP LOOP
     window.addEventListener('DOMContentLoaded', () => {
       requestJSONP("getLastBlock")
         .then(data => {
+          document.getElementById('loading').style.display = 'none';
           if (!data || !data.lastBlock) return;
           document.querySelectorAll('.grid .block-card').forEach(card => {
             if (card.textContent.trim() === data.lastBlock.trim()) {
@@ -548,7 +383,10 @@
             }
           });
         })
-        .catch(err => console.warn("Failed to fetch block telemetry context:", err));
+        .catch(err => {
+          console.warn("Failed to fetch block telemetry context:", err);
+          document.getElementById('loading').style.display = 'none';
+        });
     });
   </script>
 </body>
