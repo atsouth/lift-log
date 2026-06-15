@@ -57,14 +57,15 @@
     .action-btn:active { transform: scale(0.98); }
     .btn-submit { background: var(--primary-btn); color: white; margin-top: 20px; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
     .btn-submit:disabled { background: var(--muted); box-shadow: none; opacity: 0.7; cursor: not-allowed; }
-    .btn-abort { background: transparent; color: #FF3B30; margin-top: 14px; font-weight: 500; }
+    .btn-abort { background: transparent; color: #8E8E93; margin-top: 14px; font-weight: 500; }
+    .btn-abort:active { color: var(--text); }
     
     .spinner { width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #ffffff; animation: spin 0.8s linear infinite; display: none; }
     @keyframes spin { to { transform: rotate(360deg); } }
     
-    #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(242,242,247,0.85); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; gap: 12px; }
-    .global-spinner { width: 32px; height: 32px; border: 3.5px solid rgba(0,122,255,0.15); border-radius: 50%; border-top-color: var(--primary-btn); animation: spin 0.8s linear infinite; }
-    .loading-text { font-size: 15px; font-weight: 600; color: var(--muted); letter-spacing: -0.2px; }
+    #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(242,242,247,0.85); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; gap: 16px; }
+    .global-spinner { width: 28px; height: 28px; border: 3px solid rgba(0,122,255,0.12); border-radius: 50%; border-top-color: var(--primary-btn); animation: spin 0.75s cubic-bezier(0.42, 0, 0.58, 1) infinite; }
+    .loading-text { font-size: 15px; font-weight: 500; color: #3A3A3C; letter-spacing: -0.2px; }
     
     .success-view { text-align: center; padding-top: 60px; }
     .success-icon { width: 72px; height: 72px; background: rgba(52,199,89,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 24px; color: var(--accent); }
@@ -76,17 +77,17 @@
 
   <div id="loading">
     <div class="global-spinner"></div>
-    <div class="loading-text">Synchronizing Ledger Ecosystem</div>
+    <div class="loading-text">Updating metrics...</div>
   </div>
 
   <div id="view-home" class="view active">
     <h1>Lifting Log</h1>
     <div class="grid">
       <div class="block-card" onclick="initializeSession('Push A')">Push A</div>
-      <div class="block-card" onclick="initializeSession('Pull A')">Pull A</div>
-      <div class="block-card" onclick="initializeSession('Legs A')">Legs A</div>
       <div class="block-card" onclick="initializeSession('Push B')">Push B</div>
+      <div class="block-card" onclick="initializeSession('Pull A')">Pull A</div>
       <div class="block-card" onclick="initializeSession('Pull B')">Pull B</div>
+      <div class="block-card" onclick="initializeSession('Legs A')">Legs A</div>
       <div class="block-card" onclick="initializeSession('Legs B')">Legs B</div>
     </div>
   </div>
@@ -98,7 +99,7 @@
       <div class="spinner" id="btn-spinner"></div>
       <span id="btn-text">Submit Workout</span>
     </button>
-    <button class="action-btn btn-abort" onclick="abortSession()">Abort Session</button>
+    <button class="action-btn btn-abort" onclick="abortSession()">Return to Dashboard</button>
   </div>
 
   <div id="view-success" class="view success-view">
