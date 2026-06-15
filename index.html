@@ -66,15 +66,11 @@
       letter-spacing: normal;
     }
 
-    /* VIEW MANAGEMENT SLICK OVERLAYS */
-    .view-container {
-      display: block;
-    }
-    .view-container.hidden {
-      display: none;
-    }
+    /* VIEW CONTROLLER HUD SWITCHERS */
+    .view-container { display: block; }
+    .view-container.hidden { display: none; }
 
-    /* SPLIT ROUTINE BLOCKS GRID Layout */
+    /* BLOCK SPLIT INTERFACE GRID */
     .workout-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -97,13 +93,8 @@
       cursor: pointer;
     }
 
-    .block-card:active {
-      transform: scale(0.98);
-    }
-
-    .block-card.last-completed {
-      border-color: var(--vector-teal);
-    }
+    .block-card:active { transform: scale(0.98); }
+    .block-card.last-completed { border-color: var(--vector-teal); }
 
     .block-card.last-completed::after {
       content: 'LATEST';
@@ -119,7 +110,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* BIOMETRICS DASHBOARD HUD DISPLAY MATRIX */
+    /* BIOMETRICS GRID PANELS */
     .widget-matrix {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -181,7 +172,7 @@
       color: var(--text-muted);
     }
 
-    /* UI Coloring Engines */
+    /* Categories Styling hooks */
     .theme-teal { --accent: var(--vector-teal); }
     .theme-crimson { --accent: var(--vector-crimson); }
     .theme-amber { --accent: var(--vector-amber); }
@@ -197,7 +188,7 @@
     .theme-amber .widget-meta svg { fill: var(--vector-amber); }
     .theme-indigo .widget-meta svg { fill: var(--vector-indigo); }
 
-    /* ENTRY CARD ELEMENTS */
+    /* SUB-VIEW FORM WORKOUT SHEETS */
     .workout-header-row {
       display: flex;
       justify-content: space-between;
@@ -263,7 +254,7 @@
       border: 1px dashed rgba(255, 255, 255, 0.05);
     }
 
-    /* MATRIX SUB-LEDGERS */
+    /* VERTICAL INPUT ARRAYS ROW SPECIFICATIONS */
     .sets-vertical-container {
       display: flex;
       flex-direction: column;
@@ -470,8 +461,8 @@
   </div>
 
   <script>
-    // CORE WEB APP CONNECTION ENDPOINT
-    const API_URL = "https://script.google.com/macros/s/AKfycbxryERH5UW6vV7_dN5XLUcceSAD7WqY-jfPv8NtuWl5akuF5xF1UIuf4AyrzkHDQsw9/exec";
+    // HARDCODED ROUTING URL NODE TARGET
+    const API_URL = "https://script.google.com/macros/s/AKfycbx5-KSPG8jFjOeKPgzz4uzBzY0KHdqz7xlUkKwcLOrajTpu-hkFDqVJBP7n6OEcwMiq/exec";
 
     const WORKOUT_CONFIG = {
       "Push A": ["TechnoGym Chest Press [8-12]", "TechnoGym Machine Flat Press [8-12]", "Seated Machine Lateral Raises [12-15]", "Overhead Cable Tricep Extensions [12-15]"],
@@ -523,12 +514,13 @@
           
           const exercises = WORKOUT_CONFIG[blockName] || [];
           exercises.forEach((exName) => {
-            const hist = historyMap[exName] || { s1_w:"", s1_r:"", s2_w:"", s2_r:"", s3_w:"", s3_r:"", fri: null };
-            
-            // Extract baseline parameters
+            // Normalize mapping coordinates
             const matchReps = exName.match(/\[(.*?)\]/);
             const goalRepsDisplay = matchReps ? matchReps[1] : "8-12";
             const cleanDisplayTitle = exName.replace(/\s*\[.*?\]/, '').trim();
+
+            // Resolve cross-referenced dictionary lookups safely
+            const hist = historyMap[cleanDisplayTitle] || historyMap[exName] || { s1_w:"", s1_r:"", s2_w:"", s2_r:"", s3_w:"", s3_r:"", fri: null };
 
             let friDisplay = "--";
             if (hist.fri !== undefined && hist.fri !== null && hist.fri !== "") {
@@ -551,7 +543,7 @@
               </div>
               <div class="exercise-history">${historyString}</div>
               
-              <div class="sets-vertical-container" data-exname="${exName}">
+              <div class="sets-vertical-container" data-exname="${cleanDisplayTitle}">
                 <div class="set-ledger-row">
                   <div class="set-ledger-label">Set 1</div>
                   <div class="input-wrapper">
@@ -606,7 +598,6 @@
         const wInputs = container.querySelectorAll('.input-w');
         const rInputs = container.querySelectorAll('.input-r');
         
-        // Defensive data extractor fallback: repeat historical placeholder vectors if fields are left untouched
         const getVal = (inputNode) => {
           if (inputNode.value !== "") return inputNode.value;
           var ph = inputNode.placeholder;
@@ -614,7 +605,7 @@
         };
 
         exercisesPayload.push({
-          name: name,
+          name: name, // Transmits clean standardized string name match
           s1_w: getVal(wInputs[0]), s1_r: getVal(rInputs[0]),
           s2_w: getVal(wInputs[1]), s2_r: getVal(rInputs[1]),
           s3_w: getVal(wInputs[2]), s3_r: getVal(rInputs[2])
@@ -665,7 +656,7 @@
             document.getElementById('bio-rem').innerText = bio.rem;
             document.getElementById('bio-deep').innerText = bio.deep;
             if (bio.systolic !== "--" && bio.diastolic !== "--") {
-              document.getElementById('bio-bp').innerText = `${bio.systolic}/${bio.diarkers || bio.diastolic}`;
+              document.getElementById('bio-bp').innerText = `${bio.systolic}/${bio.diastolic}`;
             } else { document.getElementById('bio-bp').innerText = bio.systolic || "--"; }
           }
         })
