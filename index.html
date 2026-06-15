@@ -1,492 +1,385 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <link class="apple-touch-icon" rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230A84FF'><path d='M7 5h2v14H7V5zm8 0h2v14h-2V5zM4 9h3v6H4V9zm13 0h3v6h-3V9zM1 11h3v2H1v-2zm20 0h3v2h-3v-2zM8 9h8v6H8V9z'/></svg>">
-  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Performance & Telemetry Log</title>
   <style>
-    :root { 
-      --bg: #F2F2F7;
-      --card: #FFFFFF;
-      --card-elevated: #E5E5EA;
-      --accent: #34C759;
-      --primary-btn: #007AFF;
-      --text: #000000;
-      --muted: #8E8E93;
+    :root {
+      --bg-primary: #000000;
+      --card-bg: rgba(28, 28, 30, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      
+      /* Semantic Color Vectors */
+      --vector-teal: #30d5c8;
+      --vector-crimson: #ff3b30;
+      --vector-amber: #ff9f0a;
+      --vector-indigo: #bf5af2;
+      
+      --text-main: #ffffff;
+      --text-muted: #8e8e93;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); padding: 20px; padding-top: calc(20px + env(safe-area-inset-top)); padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      padding: 20px 16px;
+      min-height: 100vh;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    /* Section Headers */
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      margin-top: 20px;
+    }
+
+    /* WORKOUT BLOCKS SPLIT */
+    .workout-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .block-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 16px;
+      position: relative;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: border 0.2s ease, transform 0.1s ease;
+    }
+
+    .block-card:active {
+      transform: scale(0.98);
+    }
+
+    /* Active Highlight States */
+    .block-card.last-completed {
+      border-color: var(--vector-teal);
+    }
+
+    .block-card.last-completed::after {
+      content: 'LATEST';
+      position: absolute;
+      top: -6px;
+      right: 8px;
+      background: var(--vector-teal);
+      color: #000000;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    /* BIOMETRIC HIGH-DENSITY WIDGET MATRIX */
+    .widget-matrix {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .widget {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 115px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Top Row Layout */
+    .widget-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .widget-meta svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Center Reading Vectors */
+    .widget-value-box {
+      margin-top: 8px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .widget-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+    }
+
+    .widget-unit {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* Bottom Row Context Parameters */
+    .widget-context {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 6px;
+      margin-top: 4px;
+    }
+
+    .widget-context span {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Vector Theming Variances */
+    .theme-teal { --accent: var(--vector-teal); }
+    .theme-crimson { --accent: var(--vector-crimson); }
+    .theme-amber { --accent: var(--vector-amber); }
+    .theme-indigo { --accent: var(--vector-indigo); }
+
+    .theme-teal .widget-meta { color: var(--vector-teal); }
+    .theme-crimson .widget-meta { color: var(--vector-crimson); }
+    .theme-amber .widget-meta { color: var(--vector-amber); }
+    .theme-indigo .widget-meta { color: var(--vector-indigo); }
     
-    .view { display: none; max-width: 500px; margin: 0 auto; }
-    .view.active { display: block; }
-    
-    h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 24px; text-align: left; color: var(--text); }
-    .section-heading { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; margin: 28px 0 14px; color: var(--text); }
-    
-    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 10px; }
-    
-    .block-card { background: var(--card); border-radius: 14px; padding: 20px; text-align: center; font-size: 17px; font-weight: 600; color: var(--primary-btn); box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.1s ease, background-color 0.1s ease; cursor: pointer; }
-    .block-card:active { background-color: var(--card-elevated); transform: scale(0.97); }
-    .block-card.last-completed { border: 2px solid var(--accent); position: relative; }
-    .block-card.last-completed::after { content: "LATEST"; position: absolute; top: -8px; right: 8px; background: var(--accent); color: white; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 8px; letter-spacing: 0.5px; }
-    
-    /* Biomarker Display Grid Module */
-    .bio-card { background: var(--card); border-radius: 14px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; }
-    .bio-card-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 12px; }
-    .bio-metrics-row { display: flex; gap: 16px; align-items: baseline; }
-    .bio-data-block { flex: 1; min-width: 0; }
-    .bio-label { font-size: 11px; font-weight: 500; color: var(--muted); display: block; margin-bottom: 2px; }
-    .bio-value { font-size: 21px; font-weight: 700; color: var(--text); letter-spacing: -0.4px; }
-    .bio-unit { font-size: 12px; font-weight: 500; color: var(--muted); margin-left: 2px; }
-    
-    .card { background: var(--card); border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); overflow: hidden; }
-    .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; position: relative; gap: 12px; width: 100%; }
-    .title-area { flex: 1; min-width: 0; }
-    .exercise-title { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 6px; line-height: 1.3; word-break: break-word; color: var(--text); }
-    
-    .badge-stack { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-    .target-badge { background-color: rgba(0,122,255,0.1); color: var(--primary-btn); font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-block; white-space: nowrap; }
-    .fri-capsule { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; display: inline-block; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
-    
-    .sparkline-wrapper { width: 110px; height: 38px; flex-shrink: 0; position: relative; background: rgba(242,242,247,0.5); border-radius: 8px; overflow: hidden; padding: 2px; margin-top: 2px; }
-    .sparkline-svg { width: 100%; height: 100%; }
-    
-    .set-header { display: flex; align-items: center; color: var(--muted); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 6px; border-bottom: 0.5px solid var(--card-elevated); margin-bottom: 10px; }
-    .header-group { flex: 1; display: flex; gap: 10px; }
-    .header-col { flex: 1; text-align: center; }
-    
-    .set-row { display: flex; align-items: center; margin-bottom: 10px; }
-    .set-row:last-child { margin-bottom: 0; }
-    .set-label { width: 45px; flex-shrink: 0; font-size: 15px; font-weight: 600; color: var(--muted); }
-    .input-group { flex: 1; display: flex; gap: 10px; min-width: 0; }
-    
-    input { flex: 1; width: 0; min-width: 0; background: var(--bg); border: none; border-radius: 10px; height: 42px; text-align: center; font-size: 16px; font-weight: 500; color: var(--text); outline: none; transition: background 0.15s; }
-    input:focus { background: #E5E5EA; }
-    input::placeholder { color: var(--muted); font-weight: 400; font-size: 14px; }
-    
-    .action-btn { width: 100%; height: 50px; border-radius: 14px; border: none; font-size: 17px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: background 0.15s, transform 0.1s; }
-    .action-btn:active { transform: scale(0.98); }
-    .btn-submit { background: var(--primary-btn); color: white; margin-top: 20px; box-shadow: 0 4px 12px rgba(0,122,255,0.3); }
-    .btn-submit:disabled { background: var(--muted); box-shadow: none; opacity: 0.7; cursor: not-allowed; }
-    .btn-abort { background: transparent; color: #8E8E93; margin-top: 14px; font-weight: 500; }
-    .btn-abort:active { color: var(--text); }
-    
-    .spinner { width: 22px; height: 22px; border: 2.5px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #ffffff; animation: spin 0.8s linear infinite; display: none; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    
-    #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(242,242,247,0.85); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; gap: 16px; }
-    .global-spinner { width: 28px; height: 28px; border: 3px solid rgba(0,122,255,0.12); border-radius: 50%; border-top-color: var(--primary-btn); animation: spin 0.75s cubic-bezier(0.42, 0, 0.58, 1) infinite; }
-    .loading-text { font-size: 15px; font-weight: 500; color: #3A3A3C; letter-spacing: -0.2px; }
-    
-    .success-view { text-align: center; padding-top: 60px; }
-    .success-icon { width: 72px; height: 72px; background: rgba(52,199,89,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 24px; color: var(--accent); }
-    .success-view h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
-    .success-view p { color: var(--muted); font-size: 16px; margin-bottom: 32px; }
+    .theme-teal .widget-meta svg { fill: var(--vector-teal); }
+    .theme-crimson .widget-meta svg { fill: var(--vector-crimson); }
+    .theme-amber .widget-meta svg { fill: var(--vector-amber); }
+    .theme-indigo .widget-meta svg { fill: var(--vector-indigo); }
+
+    /* LOADING SCREEN LAYER */
+    #loading {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      gap: 12px;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      border-top-color: var(--vector-teal);
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
 
   <div id="loading">
-    <div class="global-spinner"></div>
-    <div class="loading-text">Updating metrics...</div>
+    <div class="spinner"></div>
+    <p style="font-size: 13px; color: var(--text-muted); letter-spacing: 0.5px;">SYNCING TELEMETRY MATRIX...</p>
   </div>
 
-  <div id="view-home" class="view active">
-    <h1>Lifting Log</h1>
-    <div class="grid">
-      <div class="block-card" onclick="initializeSession('Push A')">Push A</div>
-      <div class="block-card" onclick="initializeSession('Push B')">Push B</div>
-      <div class="block-card" onclick="initializeSession('Pull A')">Pull A</div>
-      <div class="block-card" onclick="initializeSession('Pull B')">Pull B</div>
-      <div class="block-card" onclick="initializeSession('Legs A')">Legs A</div>
-      <div class="block-card" onclick="initializeSession('Legs B')">Legs B</div>
-    </div>
+  <header>
+    <h1>Performance Matrix</h1>
+    <p>Operational Tracking Dashboard</p>
+  </header>
 
-    <div class="section-heading">Daily Biomarkers</div>
-    <div class="grid">
-      <div class="bio-card">
-        <div class="bio-card-title">Autonomic Control</div>
-        <div class="bio-metrics-row">
-          <div class="bio-data-block">
-            <span class="bio-label">HRV</span>
-            <span class="bio-value" id="bio-hrv">--</span><span class="bio-unit">ms</span>
-          </div>
-          <div class="bio-data-block">
-            <span class="bio-label">RHR</span>
-            <span class="bio-value" id="bio-rhr">--</span><span class="bio-unit">bpm</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="bio-card">
-        <div class="bio-card-title">Cardiovascular</div>
-        <div class="bio-metrics-row">
-          <div class="bio-data-block">
-            <span class="bio-label">Blood Pressure</span>
-            <span class="bio-value" id="bio-bp">--/--</span><span class="bio-unit">mmHg</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="bio-card">
-        <div class="bio-card-title">Body Composition</div>
-        <div class="bio-metrics-row">
-          <div class="bio-data-block">
-            <span class="bio-label">Weight</span>
-            <span class="bio-value" id="bio-weight">--</span><span class="bio-unit">lbs</span>
-          </div>
-          <div class="bio-data-block">
-            <span class="bio-label">Body Fat</span>
-            <span class="bio-value" id="bio-bf">--</span><span class="bio-unit">%</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="bio-card">
-        <div class="bio-card-title">Sleep Architecture</div>
-        <div class="bio-metrics-row">
-          <div class="bio-data-block">
-            <span class="bio-label">REM</span>
-            <span class="bio-value" id="bio-rem">--</span><span class="bio-unit">hr</span>
-          </div>
-          <div class="bio-data-block">
-            <span class="bio-label">Deep</span>
-            <span class="bio-value" id="bio-deep">--</span><span class="bio-unit">hr</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="section-title">Active Routine Splits</div>
+  <div class="workout-grid">
+    <div class="block-card" id="block-PushA">Push A</div>
+    <div class="block-card" id="block-PullA">Pull A</div>
+    <div class="block-card" id="block-PushB">Push B</div>
+    <div class="block-card" id="block-PullB">Pull B</div>
+    <div class="block-card" id="block-LegsA">Legs A</div>
+    <div class="block-card" id="block-LegsB">Legs B</div>
   </div>
 
-  <div id="view-session" class="view">
-    <h1 id="session-title">Workout</h1>
-    <div id="exercise-container"></div>
-    <button class="action-btn btn-submit" id="submit-btn" onclick="submitWorkout()">
-      <div class="spinner" id="btn-spinner"></div>
-      <span id="btn-text">Submit Workout</span>
-    </button>
-    <button class="action-btn btn-abort" onclick="abortSession()">Return to Dashboard</button>
-  </div>
-
-  <div id="view-success" class="view success-view">
-    <div class="success-icon">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  <div class="section-title">Physiological Indicators</div>
+  <div class="widget-matrix">
+    
+    <div class="widget theme-teal">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5g c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        HRV Status
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-hrv">--</div>
+        <div class="widget-unit">ms</div>
+      </div>
+      <div class="widget-context">Rest Rate: <span id="bio-rhr">--</span> bpm</div>
     </div>
-    <h2>Session Logged Successfully</h2>
-    <p>Metrics committed to master data array.</p>
-    <button class="action-btn btn-submit" onclick="returnHome()">Return Home</button>
+
+    <div class="widget theme-crimson">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.5h-2v-2h2v2zm0-4.5h-2V7h2v6z"/></svg>
+        Cardio Load
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-bp" style="font-size: 24px;">--</div>
+        <div class="widget-unit">mmHg</div>
+      </div>
+      <div class="widget-context">Vascular Pressure</div>
+    </div>
+
+    <div class="widget theme-amber">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z"/></svg>
+        Body Mass
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-weight">--</div>
+        <div class="widget-unit">lbs</div>
+      </div>
+      <div class="widget-context">Composition: <span id="bio-bf">--</span></div>
+    </div>
+
+    <div class="widget theme-indigo">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+        REM Sleep
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-rem">--</div>
+        <div class="widget-unit">hrs</div>
+      </div>
+      <div class="widget-context">Cognitive Recovery</div>
+    </div>
+
+    <div class="widget theme-indigo">
+      <div class="widget-meta">
+        <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
+        Deep Sleep
+      </div>
+      <div class="widget-value-box">
+        <div class="widget-value" id="bio-deep">--</div>
+        <div class="widget-unit">hrs</div>
+      </div>
+      <div class="widget-context">Somatic/Tissue Repair</div>
+    </div>
+
   </div>
 
   <script>
+    // HARDCODED ROUTING URL NODE TARGET
     const API_URL = "https://script.google.com/macros/s/AKfycbyHi1jr0Fcme-S-8GvnMZ40JZEW0J8mBnIYm-bRPG0hbBb37rYUgCO-zqPNcspNYh2w/exec";
 
-
-    const workoutRoutines = {
-      "Push A": ["TechnoGym Chest Press [8-12]", "TechnoGym Machine Flat Press [8-12]", "Seated Machine Lateral Raises [12-15]", "Overhead Cable Tricep Extensions [12-15]"],
-      "Pull A": ["Wide Grip Lat Pulldowns [8-12]", "Chest Supported Rows [8-12]", "Reverse Pec Deck [12-15]", "TechnoGym Preacher Curls [12-15]"],
-      "Legs A": ["TechnoGym Leg Press [8-12]", "TechnoGym Leg Extensions [12-15]", "TechnoGym Leg Curls [12-15]", "Machine Calf Raises [12-15]"],
-      "Push B": ["TechnoGym Chest Press [8-12]", "TechnoGym Pec Deck [12-15]", "Seated Machine Lateral Raises [12-15]", "Tricep Cable Pushdowns [12-15]"],
-      "Pull B": ["Lawnmowers [12-15]", "Narrow Reverse Grip Pulldowns [8-12]", "Machine Preacher Curls [12-15]"],
-      "Legs B": ["TechnoGym Leg Press [8-12]", "Supported Split Squats [8-12]", "TechnoGym Leg Curls [12-15]", "Machine Calf Raises [12-15]"]
-    };
-
-    let currentBlock = "";
-
-    function switchView(viewId) {
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById(viewId).classList.add('active');
-      window.scrollTo(0,0);
-    }
-
+    /**
+     * Headless Cross-Origin Handshake Generator
+     */
     function requestJSONP(action, params = {}) {
       return new Promise((resolve, reject) => {
-        const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-        let url = `${API_URL}?action=${action}&`;
-        for (let key in params) { url += `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}&`; }
-        const script = document.createElement('script');
-        script.src = `${url}callback=${callbackName}`;
-        const timeoutId = setTimeout(() => { cleanup(); reject(new TypeError("Database pipeline latency timeout")); }, 10000);
-        function cleanup() { clearTimeout(timeoutId); if (script.parentNode) script.parentNode.removeChild(script); delete window[callbackName]; }
-        window[callbackName] = (data) => { cleanup(); resolve(data); };
-        script.onerror = () => { cleanup(); reject(new TypeError("Failed to compile script stream resource")); };
+        const callbackName = "jsonp_callback_" + Math.round(Math.random() * 1000000);
+        window[callbackName] = function(data) {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          resolve(data);
+        };
+
+        const script = document.createElement("script");
+        let url = `${API_URL}?action=${action}&callback=${callbackName}`;
+        for (const key in params) {
+          url += `&${key}=${encodeURIComponent(params[key])}`;
+        }
+        
+        script.src = url;
+        script.onerror = (err) => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          reject(err);
+        };
         document.body.appendChild(script);
       });
     }
 
-    function initializeSession(blockName) {
-      document.getElementById('loading').style.display = 'flex';
-      currentBlock = blockName;
-      
-      requestJSONP("getMetrics", { blockName: blockName })
-        .then(historyMap => {
-          renderSessionPage(blockName, historyMap);
-          document.getElementById('loading').style.display = 'none';
-        })
-        .catch(err => {
-          alert("Error parsing execution matrix: " + err);
-          document.getElementById('loading').style.display = 'none';
-        });
-    }
-
-    function generateFriBadgeMarkup(friValue) {
-      if (friValue === null || friValue === undefined || isNaN(friValue)) return '';
-      let bgHex = '#E5E5EA', txtHex = '#48484A';
-      if (friValue <= 0.70) { bgHex = '#F8D7DA'; txtHex = '#842029'; }
-      else if (friValue < 0.99) { bgHex = '#FFF3CD'; txtHex = '#664D03'; }
-      else { bgHex = '#D1E7DD'; txtHex = '#0F5132'; }
-      return `<div class="fri-capsule" style="background-color: ${bgHex}; color: ${txtHex};">FRI: ${friValue.toFixed(2)}</div>`;
-    }
-
-    function renderSessionPage(blockName, historyMap) {
-      document.getElementById('session-title').innerText = blockName;
-      const container = document.getElementById('exercise-container');
-      container.innerHTML = "";
-      
-      const rawExercises = workoutRoutines[blockName] || [];
-      
-      rawExercises.forEach((rawString, index) => {
-        const exId = `ex_${index}`;
-        let name = rawString, target = "8-12"; 
-        const match = rawString.match(/(.*?)\[(.*?)\]/);
-        if (match) { name = match[1].trim(); target = match[2].trim(); }
-        
-        const past = historyMap[name] || {};
-        const friMarkup = generateFriBadgeMarkup(past.fri);
-        
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.setAttribute('data-exid', exId);
-        card.innerHTML = `
-          <div class="card-header-row">
-            <div class="title-area">
-              <div class="exercise-title" data-rawname="${name}">${name}</div>
-              <div class="badge-stack">
-                <div class="target-badge">Goal: ${target}</div>
-                ${friMarkup}
-              </div>
-            </div>
-            <div class="sparkline-wrapper">
-              <svg class="sparkline-svg" id="svg_${exId}" viewBox="0 0 120 40" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="grad_${exId}" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#34C759" stop-opacity="0.4"/>
-                    <stop offset="100%" stop-color="#34C759" stop-opacity="0.0"/>
-                  </linearGradient>
-                </defs>
-                <path class="spark-fill" id="fill_${exId}" fill="url(#grad_${exId})" d="M 10 38 L 60 38 L 110 38 Z" opacity="0"/>
-                <path class="spark-line" id="line_${exId}" fill="none" stroke="#8E8E93" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M 10 35 L 60 35 L 110 35"/>
-                <circle id="dot_${exId}_1" cx="10" cy="35" r="3" fill="#8E8E93" />
-                <circle id="dot_${exId}_2" cx="60" cy="35" r="3" fill="#8E8E93" />
-                <circle id="dot_${exId}_3" cx="110" cy="35" r="3" fill="#8E8E93" />
-              </svg>
-            </div>
-          </div>
-          <div class="set-header">
-            <div style="width:45px; flex-shrink:0;">Set</div>
-            <div class="header-group">
-              <div class="header-col">Weight</div>
-              <div class="header-col">Reps</div>
-            </div>
-          </div>
-          ${[1, 2, 3].map(setNum => {
-            const pastW = past[`s${setNum}_w`] !== undefined ? past[`s${setNum}_w`] : '';
-            const pastR = past[`s${setNum}_r`] !== undefined ? past[`s${setNum}_r`] : '';
-            return `
-              <div class="set-row">
-                <div class="set-label">S${setNum}</div>
-                <div class="input-group">
-                  <input type="number" step="any" inputmode="decimal" class="input-w" id="${exId}_s${setNum}_w" placeholder="${pastW ? pastW + ' lbs' : 'lbs'}">
-                  <input type="number" inputmode="numeric" pattern="\\d*" class="input-r" id="${exId}_s${setNum}_r" placeholder="${pastR ? pastR + ' reps' : 'reps'}">
-                </div>
-              </div>
-            `;
-          }).join('')}
-        `;
-        container.appendChild(card);
-      });
-
-      document.querySelectorAll('#exercise-container input').forEach(input => {
-        input.value = localStorage.getItem(input.id) || '';
-        input.addEventListener('input', (e) => { 
-          localStorage.setItem(e.target.id, e.target.value);
-          calculateCardDecayCurve(e.target.closest('.card'));
-        });
-      });
-
-      document.querySelectorAll('#exercise-container .card').forEach(card => calculateCardDecayCurve(card));
-
-      switchView('view-session');
-    }
-
-    function calculateCardDecayCurve(card) {
-      const exId = card.getAttribute('data-exid');
-      
-      const w1 = parseFloat(document.getElementById(`${exId}_s1_w`).value) || 0;
-      const r1 = parseFloat(document.getElementById(`${exId}_s1_r`).value) || 0;
-      const w2 = parseFloat(document.getElementById(`${exId}_s2_w`).value) || 0;
-      const r2 = parseFloat(document.getElementById(`${exId}_s2_r`).value) || 0;
-      const w3 = parseFloat(document.getElementById(`${exId}_s3_w`).value) || 0;
-      const r3 = parseFloat(document.getElementById(`${exId}_s3_r`).value) || 0;
-
-      const e1 = r1 > 0 ? w1 * (1 + r1 / 30) : 0;
-      const e2 = r2 > 0 ? w2 * (1 + r2 / 30) : 0;
-      const e3 = r3 > 0 ? w3 * (1 + r3 / 30) : 0;
-
-      const lineEl = document.getElementById(`line_${exId}`);
-      const fillEl = document.getElementById(`fill_${exId}`);
-      const gradStop1 = document.querySelector(`#grad_${exId} stop:nth-child(1)`);
-      const gradStop2 = document.querySelector(`#grad_${exId} stop:nth-child(2)`);
-      const d1 = document.getElementById(`dot_${exId}_1`);
-      const d2 = document.getElementById(`dot_${exId}_2`);
-      const d3 = document.getElementById(`dot_${exId}_3`);
-
-      if (e1 === 0 && e2 === 0 && e3 === 0) {
-        lineEl.setAttribute('d', "M 10 20 L 60 20 L 110 20");
-        fillEl.setAttribute('opacity', '0');
-        return;
-      }
-
-      const maxE1RM = Math.max(e1, e2, e3);
-      
-      const normalizeY = (val) => {
-        if (val === 0) return 35;
-        return 32 - ((val / maxE1RM) * 22);
-      };
-
-      const y1 = normalizeY(e1);
-      const y2 = e2 > 0 ? normalizeY(e2) : y1;
-      const y3 = e3 > 0 ? normalizeY(e3) : y2;
-
-      const x1 = 15, x2 = 60, x3 = 105;
-
-      const cpsX1 = (x1 + x2) / 2;
-      const cpsX2 = (x2 + x3) / 2;
-      const pathDefinition = `M ${x1} ${y1} C ${cpsX1} ${y1}, ${cpsX1} ${y2}, ${x2} ${y2} C ${cpsX2} ${y2}, ${cpsX2} ${y3}, ${x3} ${y3}`;
-      
-      lineEl.setAttribute('d', pathDefinition);
-      fillEl.setAttribute('d', `${pathDefinition} L ${x3} 38 L ${x1} 38 Z`);
-      fillEl.setAttribute('opacity', '1');
-
-      d1.setAttribute('cy', y1); d1.setAttribute('fill', e1 > 0 ? 'var(--primary-btn)' : '#8E8E93');
-      d2.setAttribute('cy', y2); d2.setAttribute('fill', e2 > 0 ? 'var(--primary-btn)' : '#8E8E93');
-      d3.setAttribute('cy', y3); d3.setAttribute('fill', e3 > 0 ? 'var(--primary-btn)' : '#8E8E93');
-
-      if (e1 > 0 && e3 > 0) {
-        const decayRatio = e3 / e1;
-        let colorTheme = '#34C759';
-        if (decayRatio <= 0.75) colorTheme = '#FF3B30';
-        else if (decayRatio < 0.94) colorTheme = '#FF9500';
-        
-        lineEl.setAttribute('stroke', colorTheme);
-        gradStop1.setAttribute('stop-color', colorTheme);
-        gradStop2.setAttribute('stop-color', colorTheme);
-      } else {
-        lineEl.setAttribute('stroke', '#007AFF');
-        gradStop1.setAttribute('stop-color', '#007AFF');
-        gradStop2.setAttribute('stop-color', '#007AFF');
-      }
-    }
-
-    function submitWorkout() {
-      const btn = document.getElementById('submit-btn');
-      const spinner = document.getElementById('btn-spinner');
-      const btnText = document.getElementById('btn-text');
-      
-      btn.disabled = true;
-      spinner.style.display = 'block';
-      btnText.innerText = "Transmitting Data Matrix...";
-
-      const cardNodes = document.querySelectorAll('#exercise-container .card');
-      const loggedExercises = [];
-
-      cardNodes.forEach((card) => {
-        const exId = card.getAttribute('data-exid');
-        const name = card.querySelector('.exercise-title').getAttribute('data-rawname');
-        loggedExercises.push({
-          name: name,
-          s1_w: document.getElementById(`${exId}_s1_w`).value,
-          s1_r: document.getElementById(`${exId}_s1_r`).value,
-          s2_w: document.getElementById(`${exId}_s2_w`).value,
-          s2_r: document.getElementById(`${exId}_s2_r`).value,
-          s3_w: document.getElementById(`${exId}_s3_w`).value,
-          s3_r: document.getElementById(`${exId}_s3_r`).value
-        });
-      });
-
-      const payload = {
-        action: "processWorkoutLog",
-        payload: { blockName: currentBlock, exercises: loggedExercises }
-      };
-
-      fetch(API_URL, {
-        method: "POST",
-        mode: "no-cors", 
-        headers: { "Content-Type": "text/plain;charset=utf-8" }, 
-        body: JSON.stringify(payload)
-      })
-      .then(() => {
-        localStorage.clear();
-        spinner.style.display = 'none';
-        btnText.innerText = "Submit Workout";
-        btn.disabled = false;
-        switchView('view-success');
-      })
-      .catch(err => {
-        alert('Network transport failure: ' + err);
-        spinner.style.display = 'none';
-        btnText.innerText = "Submit Workout";
-        btn.disabled = false;
-      });
-    }
-
-    function abortSession() { switchView('view-home'); }
-    function returnHome() { switchView('view-home'); }
-
-    // REFINED HANDSHAKE INITIALIZATION LOOP WITH ERROR INTERCEPTION
+    // Telemetry Sync Loop Execution
     window.addEventListener('DOMContentLoaded', () => {
       requestJSONP("getLastBlock")
         .then(data => {
           document.getElementById('loading').style.display = 'none';
           if (!data) return;
           
-          // Intercept caught backend execution exceptions
-          if (data.status === "error" || (data.biomarkers && data.biomarkers.error)) {
-            alert("Sync Error: " + (data.message || data.biomarkers.error));
-            return;
-          }
-          
-          // Route 1: Highlight Last Completed Workout Card Outline
+          // Hydrate Split Outline Highlights
           if (data.lastBlock) {
-            document.querySelectorAll('.grid .block-card').forEach(card => {
-              if (card.textContent.trim() === data.lastBlock.trim()) {
-                card.classList.add('last-completed');
-              }
-            });
+            const cleanTarget = data.lastBlock.trim().replace(/\s+/g, '');
+            const card = document.getElementById(`block-${cleanTarget}`);
+            if (card) {
+              card.classList.add('last-completed');
+            }
           }
           
-          // Route 2: Hydrate Daily Physiological Metrics Array
+          // Hydrate Dashboard Widgets
           if (data.biomarkers) {
             const bio = data.biomarkers;
+            
             document.getElementById('bio-hrv').innerText = bio.hrv;
             document.getElementById('bio-rhr').innerText = bio.rhr;
             document.getElementById('bio-weight').innerText = bio.weight;
-            document.getElementById('bio-bf').innerText = bio.bodyFat;
+            document.getElementById('bio-bf').innerText = bio.bodyFat.includes('%') ? bio.bodyFat : bio.bodyFat + '%';
             document.getElementById('bio-rem').innerText = bio.rem;
             document.getElementById('bio-deep').innerText = bio.deep;
             
             if (bio.systolic !== "--" && bio.diastolic !== "--") {
               document.getElementById('bio-bp').innerText = `${bio.systolic}/${bio.diastolic}`;
+            } else {
+              document.getElementById('bio-bp').innerText = bio.systolic || "--";
             }
           }
         })
         .catch(err => {
-          console.warn("Telemetry connection failure:", err);
+          console.error("Pipeline Sync Interrupted:", err);
           document.getElementById('loading').style.display = 'none';
-          
-          // Multi-Account Alert Trigger
-          alert("Network Handshake Aborted.\n\nIf you are logged into multiple Google Accounts in this browser, Google's macro security engine drops cross-origin script redirects. Test in a clean Private/Incognito Window to isolate authorization state.");
         });
     });
   </script>
