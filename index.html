@@ -444,14 +444,20 @@
     function abortSession() { switchView('view-home'); }
     function returnHome() { switchView('view-home'); }
 
-    // INITIAL RECOVERY LOOP: Hydrates UI telemetry patterns across selection matrix via JSONP
+    // REFINED HANDSHAKE INITIALIZATION LOOP WITH ERROR INTERCEPTION
     window.addEventListener('DOMContentLoaded', () => {
       requestJSONP("getLastBlock")
         .then(data => {
           document.getElementById('loading').style.display = 'none';
           if (!data) return;
           
-          // Route 1: Hydrate Last Completed Workout Card Outline
+          // Intercept caught backend execution exceptions
+          if (data.status === "error" || (data.biomarkers && data.biomarkers.error)) {
+            alert("Sync Error: " + (data.message || data.biomarkers.error));
+            return;
+          }
+          
+          // Route 1: Highlight Last Completed Workout Card Outline
           if (data.lastBlock) {
             document.querySelectorAll('.grid .block-card').forEach(card => {
               if (card.textContent.trim() === data.lastBlock.trim()) {
@@ -476,8 +482,11 @@
           }
         })
         .catch(err => {
-          console.warn("Failed to fetch block telemetry context:", err);
+          console.warn("Telemetry connection failure:", err);
           document.getElementById('loading').style.display = 'none';
+          
+          // Multi-Account Alert Trigger
+          alert("Network Handshake Aborted.\n\nIf you are logged into multiple Google Accounts in this browser, Google's macro security engine drops cross-origin script redirects. Test in a clean Private/Incognito Window to isolate authorization state.");
         });
     });
   </script>
